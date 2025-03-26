@@ -264,6 +264,11 @@ header>p {
 	margin: 1em 0 0 0;
 }
 
+p {
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
 footer {
 	margin: 2em 0 0 0;
 }
@@ -2389,7 +2394,7 @@ button:active,
 }
 
 #main>section.four {
-	background-color: #e8edec;
+	background-color: #ecf1f1;
 }
 
 /* Wide */
@@ -2772,4 +2777,164 @@ button:active,
 		margin-top: 0;
 	}
 
+}
+
+/* Resume Styling */
+.resume-content {
+	max-width: 900px;
+	margin: 0 auto;
+	line-height: 1.3;
+}
+
+.resume-header {
+	margin-bottom: 15px;
+	text-align: center;
+}
+
+.resume-section {
+	margin-bottom: 20px;
+}
+
+.resume-section h3 {
+	font-weight: bold;
+	border-bottom: 2px solid #0077ff;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+.resume-section>div {
+	text-align: left;
+}
+
+.skill-category,
+.education-item,
+.award-item,
+.research-item,
+.research-inst,
+.experience-item,
+.experience-inst,
+.leadership-item,
+.project-item {
+	margin-bottom: 10px;
+}
+
+.skill-category h4,
+.education-item h4 {
+	font-weight: bolder;
+}
+
+.award-item h4 {
+	font-weight: bolder;
+}
+
+.research-item h4 {
+	font-weight: bolder;
+	font-size: 1.1em;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.research-inst h4 {
+	font-weight: normal;
+	font-size: 0.9em;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.experience-item h4 {
+	font-weight: bolder;
+	font-size: 1.1em;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.experience-inst h4 {
+	font-weight: normal;
+	font-size: 0.9em;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.leadership-item h4 {
+	font-weight: bolder;
+}
+
+.project-item h4 {
+	margin-bottom: 5px;
+}
+
+.date {
+	color: #ff325b;
+	font-size: 0.9em;
+	text-align: left;
+	font-weight: lighter;
+}
+
+.location {
+	font-size: 0.9em;
+	font-style: italic;
+}
+
+.deets {
+	font-size: 0.9em;
+	font-weight: lighter;
+}
+
+.degree {
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.details {
+	font-size: 0.8em;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.honors {
+	font-size: 0.8em;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+ul {
+	padding-left: 20px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+ul li {
+	margin-bottom: 3px;
+}
+
+.publications-list {
+	padding-left: 20px;
+	margin-top: 5px;
+}
+
+.publications-list li {
+	margin-bottom: 5px;
+	text-align: left;
+}
+
+.coursework-toggle {
+	color: #0077ff;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.coursework-list {
+	margin-top: 10px;
+	padding-left: 20px;
+}
+
+.company-logo {
+	width: 60px;
+	height: auto;
+	vertical-align: middle;
+	margin-left: -70px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	margin-top: 5px;
 }
