@@ -1,0 +1,633 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>‘Beat-the-Expert’: An IL-RL Framework to
+        Outperform Expert Racing Policies | Vineet Pasumarti</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <style>
+        #main .container {
+            text-align: left;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+</head>
+
+<body class="is-preload">
+
+    <!-- Header -->
+    <div id="header">
+        <div class="top">
+            <nav id="nav">
+                <ul>
+                    <li><a href="index.html#about" id="about-link"><span class="icon solid fa-user">Vineet
+                                Pasumarti</span></a></li>
+                    <li><a href="index.html#projects" id="portfolio-link"><span
+                                class="icon solid fa-th">Projects</span></a></li>
+                    <li><a href="index.html#resume" id="resume-link"><span
+                                class="icon solid fa-file">Resume/CV</span></a></li>
+                    <li><a href="index.html#contact" id="contact-link"><span
+                                class="icon solid fa-envelope">Contact</span></a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="bottom">
+            <ul class="icons">
+                <li><a href="https://github.com/vineetpasumarti" class="icon brands fa-github"><span
+                            class="label">Github</span></a></li>
+                <li><a href="https://www.linkedin.com/in/vineetpasumarti/" class="icon brands fa-linkedin"><span
+                            class="label">LinkedIn</span></a></li>
+                <li><a href="index.html#contact" class="icon solid fa-envelope"><span class="label">Email</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div id="main">
+        <section class="three">
+            <div class="container">
+                <header>
+                    <h2 class="alt"><strong>‘Beat-the-Expert’: An F1TENTH IL-RL Framework to
+                            Outperform Expert Racing Policies</strong></h2>
+                </header>
+
+                <p><strong>Authors:</strong> Vineet Pasumarti, Ethan Senatore</p>
+
+                <div style="text-align: center;">
+                    <img src="images/beatexpert_cover.gif" alt="Project Image"
+                        style="min-width: 50%; border-radius: 5px; margin-bottom: 1em;" />
+                </div>
+
+                <p>Scaled autonomous racing poses as an effective environment for developing perception, planning, and
+                    control algorithms with quantifiable performance metrics. Learning-based control policies typically
+                    leverage end-to-end reinforcement learning (RL) methods that are sample inefficient and prone to
+                    converging at local optima. We present an autonomous racing framework on the F1TENTH platform that
+                    bootstraps Proximal Policy Optimization (PPO) with a pre-trained HG-DAGGER imitation learning (IL)
+                    policy to improve sample efficiency and exceed the performance of expert demonstrations of varying
+                    difficulty. The policy we generate from our IL-RL framework surpasses the performance of the easiest
+                    expert demonstration, but fails to outperform the medium and hardest difficulty experts. Our
+                    findings confirm an imitation learning bootstrap improves RL sample efficiency, but also indicates
+                    that end-to-end RL may be most effective in producing an agile control policy in the context of
+                    autonomous racing.</p>
+
+                <h3>Introduction</h3>
+                <p>The fast-paced and dynamic nature of racing provides an excellent platform to test different RL
+                    approaches. We identified this domain not only as an exciting application area but also as a
+                    practical environment with quantifiable metrics for testing the limits of RL algorithms. The
+                    challenge of pushing a robotic system to perform at high speeds while maintaining safety and
+                    precision peaked our curiosity and led to the development of this project. Both RL and IL have
+                    emerged in literature as feasible and competitive methods to solving the autonomous racing
+                    challenge. [1] End-to-end reinforcement learning
+                    agents have even shown impressive capabilities in new settings which allows for generalizable neural
+                    networks to have an adaptive racing policy [2]. We pose the question - can RL improve
+                    upon
+                    an IL policy to produce more robust and agile control policies that outperform the existing expert?
+                </p>
+
+                <p>To investigate this, we chose the F1TENTH platform as our experimental testbed. Its scaled-down
+                    format supported by a lightweight simulator offer a preferable setting to evaluate and train
+                    different
+                    learning strategies. Ultimately, our goal is to better understand the trade-offs between imitation
+                    learning and reinforcement learning in the context of autonomous racing. In doing so, we wished to
+                    contribute insights into how these techniques can be combined to push the boundaries of autonomous
+                    driving performance.</p>
+
+                <p>
+                    End-to-end reinforcement learning approaches for autonomous racing have emerged as a successful
+                    strategy to surpass expert-level performance, \citep{Kaufmann} even outperforming human experts in
+                    certain domains like drone racing. There are far fewer studies that explore imitation learning for
+                    autonomous racing. This is for good reason. Reinforcement learning by nature improves its policy
+                    through 'reward hacking' and maximizes cumulative rewards, allowing for impressive performance in
+                    racing environments. \citep{Koirala} Imitation learning, however, typically reaches a performance
+                    ceiling determined by the capabilities of the expert policy. We assert that the performance of the
+                    policy can be improved upon by finetuning the weights of the IL neural network using on-policy
+                    reinforcement learning, such as Proximal Policy Optimization.
+                </p>
+
+                <p>
+                    The most naive implementation of imitation learning is Behavior Cloning (BC). Behavior cloning uses
+                    supervised machine learning to map observations of the state space to actions, thus training the
+                    agent to learn an expert demonstrator's policy. BC, however, produces policies that are prone to
+                    experiencing a distribution shift, as the actions of the agent eventually shift its observations to
+                    be dissimilar from the expert data it was trained on.
+                </p>
+
+                <p>
+                    Dataset aggregation (DAGGER) mitigates the effects of distribution shift by stochastically alternat-
+                    ing control between the agent’s policy and the expert policy to collect corrective labels. [5] While
+                    DAGGER reduces the compounding error issues of BC, it lacks strong convergence guarantees in
+                    general settings [6]. Human-Gated DAGGER (HG-DAGGER) refines this by letting a human expert
+                    serve as a gating function [7]. The agent executes actions until the human deems the state subopti-
+                    mal and intervenes, at which point only the expert’s actions are recorded. In practice, we can
+                    define
+                    a performance threshold to automate the human intervention. Existing work from Sun et al. [7]
+                    demonstrates that HG-DAGGER is a viable and tested imitation learning algorithm for F1TENTH
+                    autonomous racing
+                </p>
+
+                <p>
+                    Bootstrapping a PPO policy using HG-DAGGER presents a tractable method for autonomous vehicle
+                    control and an opportunity to outperform expert demonstrators. Because end-to-end RL approaches
+                    suffer from sample inefficiency when faced with high-dimensional action spaces that optimize both
+                    steering and speed, strategically decomposing the action space by mapping LiDAR observations to
+                    steering angle during the IL bootstrap, and exploiting higher speed during RL, the
+                    final
+                    policy may converge to outperform the expert demonstrations and/or exhibit superior performance
+                    than an end-to-end solution.
+                </p>
+
+                <h4>Contributions</h4>
+                <ul>
+                    <li>We develop an IL-RL pipeline to surpass the performance of an expert demonstration.</li>
+                    <li>We provide a comparison of end-to-end RL policies and bootstrapped RL policies for racing.</li>
+                </ul>
+
+                <div style="text-align: center;">
+                    <img src="images/crop_map_1_f1tenth.png" style="width: 42%; display: inline-block;" />
+                    <img src="images/f1tenth_raceline_traj.png" style="width: 50%; display: inline-block;" />
+                    <p><strong>Figure 1:</strong> (Left) The F1TENTH racetrack used for training and evaluation of the
+                        learned policies against expert demonstrations. (Right) The optimal raceline computed for
+                        minimum curvature and followed by the expert policy using a pure pursuit controller.</p>
+                </div>
+
+                <h3>Methodology</h3>
+
+                <p>The agent’s policy network is pre-trained using HG-DAGGER and finetuned with Proximal Policy
+                    Optimization (PPO) on a sample racetrack depicted in Figure 1. We repeat this process for each
+                    difficulty of expert demonstrations (easy, medium, hard) to produce three policies that are
+                    evaluated
+                    against the respective expert on the same racetrack that the policy is trained on.</p>
+
+                <h4>Imitation Learning Bootstrap:</h4>
+
+                <p>
+                    We produce the learned policy inside the F1TENTH gym
+                    using HG-DAGGER for imitation learning.
+                    The expert demonstrations follow a classical pure-pursuit controller on an optimal raceline
+                    trajectory
+                    according to three different velocity profiles to represent three levels of difficulty. The learned
+                    policy is a multi-layer perceptron (MLP) that observes a 54-dimensional, down-sampled 1080-ray
+                    LiDAR scan concatenated with the car’s current linear velocity. The hidden dimension is 256 and
+                    the learning rate is 0.0001. The pure-pursuit expert computes its control outputs using only the
+                    vehicle’s (x, y) position and heading θ. The action space is continuous steering and speed for both
+                    policies.
+                </p>
+
+                <p>
+                    We define three expert policies as an easy, medium, and hard demonstrator. For the easy and medium
+                    experts, we decouple the action space and fix their velocities at 3 m/s and 5 m/s respectively. The
+                    pure-pursuit controller outputs steering angle in accordance with an optimal raceline trajectory
+                    that is
+                    calculated by minimizing the summed curvature of the track and maintains a maximum top speed of
+                    8 m/s [8]. The hard expert follows the longitudinal velocity (vx) and longitudinal acceleration (ax)
+                    profiles of the optimal raceline trajectory, reaching a top speed of 8 m/s in straights and
+                    maintains a
+                    minimum velocity of approximately 5 m/s in turns
+                </p>
+
+                <p>
+                    Human-gated imitation learning combats distribution shift by invoking the expert policy in unknown
+                    states. We define two thresholds, γv and γω , which equal 1 and 0.1 respectively. The expert policy
+                    is triggered during training when the difference in speed or steering angle between agent and expert
+                    has a magnitude greater than the prescribed threshold.
+                </p>
+
+                <h4>Reinforcement Learning:</h4>
+
+                <p>We employ Proximal Policy Optimization (PPO) to finetune the weights of the pre-trained HG-
+                    DAGGER imitation learning policy. The RL policy network utilizes an identical architecture as the
+                    IL policy, maintaining a 54-dimensional down-sampled LiDAR scan concatenated with the vehicle’s
+                    linear velocity, and produces continuous steering and speed commands as outputs. We import
+                    weights from the HG-DAGGER policy network to initialize weights for the PPO policy network. We
+                    experiment with both an identical transfer of all weights in the network as well as specifically
+                    copying the feature extraction layers and steering output weight while randomly initializing the
+                    velocity
+                    input weight and speed output weight to encourage exploration.</p>
+
+                <p>The agent aims to maximize its cumulative rewards that track raceline progress, incentivize high
+                    velocity, and penalize collisions. We structure our rewards as the following:</p>
+
+                <p>\[ R = R_v + R_p + R_c \tag{1} \]</p>
+
+                <p>where the individual components are defined as:</p>
+
+                <p>
+                    \[
+                    \begin{aligned}
+                    R_v &= 0.25 v_t \\\\
+                    R_p &= 10 \times \Delta s_t \\\\
+                    R_c &= -1 \\\\
+                    \end{aligned}
+                    \tag{2}
+                    \]
+                </p>
+
+                <p>
+                    where \( v_t \) is the current forward velocity at time \( t \), which encourages the agent to
+                    maintain a high
+                    speed, \( \Delta s_t = s_t - s_{t-1} \) represents the distance traveled along the track centerline
+                    since the
+                    previous timestep, and \( R_c \) indicates a collision penalty of \(-1\).
+                </p>
+
+
+                <p>
+                    During training, the PPO agent interacts with the environment and collects experience tuples
+                    \((s, a, r, s', \log\pi(a|s), \text{done})\) to inform policy updates:
+                </p>
+
+                <ul>
+                    <li><strong>State \((s)\):</strong> The current observation (54-dimensional LiDAR scan + vehicle
+                        velocity) that serves as input to the policy network.</li>
+                    <li><strong>Action \((a)\):</strong> Steering angle and speed commands.</li>
+                    <li><strong>Reward \((r)\):</strong> Cumulative rewards as defined above.</li>
+                    <li><strong>Next state \((s')\):</strong> Resulting observation after executing action \(a\) that is
+                        used to estimate the value function and calculate the advantage.</li>
+                    <li><strong>Log probability \((\log\pi(a|s))\):</strong> The likelihood of an action under the
+                        current policy.</li>
+                    <li><strong>Done flag:</strong> Signals episode termination.</li>
+                </ul>
+
+                <p>
+                    Our PPO implementation collects experiences in trajectories of 2048 steps before performing policy
+                    updates.
+                    We employ Generalized Advantage Estimation (GAE) with \(\lambda=0.95\) to balance bias-variance
+                    tradeoff
+                    in advantage calculations. Policy optimization occurs over 10 epochs with actor and critic learning
+                    rates of 0.0002.
+                    We use mini-batches of size 64 and L2 regularization with coefficient 0.001.
+                    We apply a discount factor \(\gamma = 0.99\) and constrain the policy update with a clip parameter
+                    \(\epsilon = 0.2\).
+                    We define the entropy coefficient and its decay as 0.001 and 0.99 respectively.
+                </p>
+
+                <p>
+                    In our end-to-end reinforcement learning implementation, we maintain identical hyperparameters as
+                    the bootstrapped policy
+                    but randomly initialize all weights in the MLP for training.
+                </p>
+
+                <p>
+                    Policy evaluation occurs at regular intervals, measuring average rewards and velocities across
+                    multiple episodes
+                    without exploration noise to monitor learning progress.
+                </p>
+
+
+                <h3>Experimental Results</h3>
+
+                <p>
+                    We evaluate the performance of the bootstrapped reinforcement learning policies against their
+                    respective expert policies of varying difficulty levels (Easy, Medium, Hard), as seen in Figure 1.
+                    We include a comparison of an end-to-end RL policy as well. Our performance metric is lap time where
+                    lower times indicate better performance.
+                </p>
+
+                <div style="text-align: center;">
+                    <img src="images/f1tenth_hamilton_bar.png" alt="Lap Time Comparison Chart"
+                        style="max-width: 100%; margin: 1em 0;" />
+                    <p><strong>Figure 1:</strong> Comparison of lap times for expert demonstrators and RL agents. The
+                        bootstrapped RL agents show similar performance and are outperformed by the end-to-end RL agent.
+                        Only the easy expert demonstrator is surpassed by the RL agents.</p>
+                </div>
+
+                <p>
+                    The Easy Bootstrapped RL agent (37.41s) significantly outperforms its corresponding Easy Expert
+                    demonstrator (52.12s), achieving a 28.22% reduction in lap time. This indicates that the learned
+                    policy successfully decouples the action space to learn the correct steering angles based on LiDAR
+                    scan and increase speed beyond the expert demonstrations to maximize cumulative rewards.
+                </p>
+
+                <p>
+                    The Medium and Hard bootstrapped RL agents fail to outperform their corresponding expert
+                    demonstrations. The Medium Expert achieves a lap time of 31.27 seconds, outperforming the Medium
+                    Bootstrapped RL agent at 38.80 seconds. Similarly, the Hard Expert significantly outperforms the
+                    Hard Bootstrapped RL agent, with lap times of 24.11 seconds and 37.68 seconds respectively. We note
+                    that the performance gap between the expert and the bootstrapped RL agent widens as expert quality
+                    improves. Despite being provided a pre-trained policy equivalent to the expert, our results indicate
+                    that bootstrapped RL methods may struggle to match increasingly agile demonstrations in the context
+                    of autonomous racing.
+                </p>
+
+                <p>
+                    We also recognize that all three bootstrapped policies achieved similar lap times (37.41–38.80s)
+                    despite being pre-trained by three different expert demonstrators of varying performance. This
+                    indicates that our PPO implementation likely plateaus in performance due to the reward structure and
+                    exploration parameters rather than by the performance of the imitation learning policy.
+                </p>
+
+                <p>
+                    Interestingly, the End-to-end RL policy (34.75s), which was trained without imitation learning
+                    bootstrapping, outperformed all bootstrapped approaches although it still fell short of
+                    outperforming the Medium and Hard experts. The end-to-end RL agent's similarity in lap time to the
+                    bootstrapped agents also indicates the influence, or lack thereof, of the bootstrapped imitation
+                    learning policy on the final performance. The importance of the RL reward structure and exploration
+                    parameters strongly outweigh the importance of the bootstrap.
+                </p>
+
+                <table>
+                    <caption><strong>Table 1:</strong> Example Map Testing Across Different Policies</caption>
+                    <thead>
+                        <tr>
+                            <th>Policy</th>
+                            <th>Average Speed (m/s)</th>
+                            <th>Average Lap Time (s)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Hard Expert</td>
+                            <td>6.48</td>
+                            <td>24.11</td>
+                        </tr>
+                        <tr>
+                            <td>Medium Expert</td>
+                            <td>5.01</td>
+                            <td>31.27</td>
+                        </tr>
+                        <tr>
+                            <td>Easy Expert</td>
+                            <td>3.14</td>
+                            <td>52.19</td>
+                        </tr>
+                        <tr>
+                            <td>Hard Bootstrap RL</td>
+                            <td>4.15</td>
+                            <td>37.67</td>
+                        </tr>
+                        <tr>
+                            <td>Medium Bootstrap RL</td>
+                            <td>4.03</td>
+                            <td>38.79</td>
+                        </tr>
+                        <tr>
+                            <td>Easy Bootstrap RL</td>
+                            <td>4.18</td>
+                            <td>37.41</td>
+                        </tr>
+                        <tr>
+                            <td>End-To-End RL</td>
+                            <td>4.50</td>
+                            <td>34.75</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>
+                    We also note in Table 1 that the RL agents converge to a constant velocity that is maintained
+                    throughout the track, rather than vary velocity to achieve higher speeds in straightaways and
+                    maintain safe control during turns, as the hard expert does. A deeper neural network may learn this
+                    behavior, however, the 2-hidden-layer MLP utilized in our PPO implementation converges to a uniform
+                    velocity profile.
+                </p>
+
+                <p>
+                    Although the IL bootstrap appears not to provide a lap time performance benefit compared to
+                    end-to-end RL, we record significantly better sample efficiency, as the bootstrapped RL policy
+                    converges at approximately 180,000 steps, compared to the end-to-end RL policy which converges at
+                    500,000 steps.
+                </p>
+
+                <p>
+                    For our end-to-end RL policy, finding a balance of the <em>weights</em> for each reward proved to be
+                    the most significant hurdle to overcome to achieve good performance. Each time a model was trained,
+                    we carefully noted how the policy behaved and whether it was able to strike a balance between speed
+                    and safety. We found that the average reward per episode, average episode length, and loss
+                    throughout training were the most helpful metrics to track to optimize performance. Additionally, we
+                    experimented with various amounts of training time steps to find when the policy converged to the
+                    best state. Ultimately, we found that \( \sim 500{,}000 \) time steps was sufficient for the policy
+                    to converge. Figure 2 depicts the average reward per step and average episode length per step for
+                    eight different training runs that we went through. Each policy had its strengths and weaknesses,
+                    and through careful experimentation we settled on the reward structure and weights mentioned in
+                    Equation (1). Each policy was trained on the example map depicted in Figure 1 which proved to be the
+                    most well-balanced track providing both long straights and sharp turns to train the policy.
+                </p>
+
+                <div style="text-align: center;">
+                    <img src="images/W&B Chart 5_5_2025, 8_26_32 PM.png" style="width: 48%; display: inline-block;" />
+                    <img src="images/W&B Chart 5_5_2025, 8_27_17 PM.png" style="width: 48%; display: inline-block;" />
+                    <p><strong>Figure 2:</strong> (Left) The average reward per training step of eight different
+                        policies trained each with a unique reward structure. (Right) The average episode length per
+                        training step. The red line is the policy we settled with.</p>
+                </div>
+
+                <p>
+                    The end-to-end RL policy also proved to be successful in generalizing to different tracks. Due to
+                    the nature of the observations provided to the policy, no map is memorized. In contrast, the agent
+                    is able to adapt to various tracks and simply <em>react</em> to differing scans of its environment.
+                    Table 2 presents the performance of the End-to-End RL policy across a diverse set of one-tenth sized
+                    real-world tracks. Overall, the policy demonstrates a commendable degree of generalization, managing
+                    to complete full laps on the majority of tracks despite being trained on a single map.
+                </p>
+
+                <table>
+                    <caption><strong>Table 2:</strong> End-to-End RL Test Metrics Across Different Tracks (25 Laps Each)
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th>Track</th>
+                            <th>Average Speed (m/s)</th>
+                            <th>Average Lap Time (s)</th>
+                            <th>Lap Completion (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Example Map</td>
+                            <td>4.50</td>
+                            <td>34.75</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td>Spielberg</td>
+                            <td>4.46</td>
+                            <td>78.64</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td>Nuerburgring</td>
+                            <td>4.21</td>
+                            <td>112.42</td>
+                            <td>84</td>
+                        </tr>
+                        <tr>
+                            <td>Sao Paulo</td>
+                            <td>4.33</td>
+                            <td>85.27</td>
+                            <td>96</td>
+                        </tr>
+                        <tr>
+                            <td>Spa</td>
+                            <td>4.83</td>
+                            <td>116.32</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td>Hockenheim</td>
+                            <td>4.85</td>
+                            <td>81.63</td>
+                            <td>8</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="text-align: center;">
+                    <img src="images/Hockenheim_map.png" style="width: 33%; display: inline-block;" />
+                    <img src="images/Spa_map.png" style="width: 33%; display: inline-block;" />
+                    <p><strong>Figure 3:</strong> (Left) Hockenheim. (Right) Spa-Francorchamps.</p>
+                </div>
+
+                <p>
+                    The Example Map, which the policy was trained on, yields optimal results with 100% lap completion, a
+                    moderate average speed (4.50 m/s), and a short lap time (34.75 s). On more complex circuits like
+                    Spielberg and Sao Paulo, the policy still performs reliably, maintaining high completion rates (100%
+                    and 96%, respectively), although lap times increase, indicating out-of-distribution curvature that
+                    forces more cautious navigation and suboptimal trajectories. However, the agent's limitations become
+                    evident on tracks like Nuerburgring, Spa-Francorchamps, and
+                    Hockenheim. Although it retains respectable speed (over 4.2 m/s in all cases), the lap completion
+                    percentage drops drastically, especially on Spa (12%) and Hockenheim (8%). As can be seen in Figure
+                    3, both tracks contain sections with tight, technical turns, which expose a fundamental weakness of
+                    the policy: its limited ability to plan through sharp or blind corners. This is likely due to the
+                    reactive nature of its learned policy, which depends on immediate sensor inputs (e.g., LiDAR scans)
+                    without any map memory or long-term trajectory planning. As noted, successful navigation through
+                    sharp corners occasionally occurred when the agent inadvertently took wider lines into turns,
+                    allowing for better environmental visibility. However, this behavior appears to be incidental rather
+                    than intentional, underscoring the need for more diverse training environments or the integration of
+                    planning components into the policy.
+                </p>
+
+                <h3>Conclusion</h3>
+
+                <p>
+                    This work explored the integration of imitation learning and reinforcement learning for autonomous
+                    racing on the F1TENTH platform. We aimed to surpass expert demonstration performance and improve
+                    upon previously laid-out work in the field. By bootstrapping PPO-based RL imitation policies, we
+                    observed that the resulting agent could outperform the easiest expert but struggled to beat the
+                    expert demonstrations. While the IL-RL framework significantly improved the sample efficiency by
+                    converging nearly three times faster than end-to-end RL, the final lap times plateaued regardless of
+                    the expert difficulty. Notably, end-to-end RL achieved the best lap times among learned policies and
+                    demonstrated commendable generalization to unseen tracks. However, the policy exhibited limitations
+                    in handling sharp or technical turns due to its reactive and memory-less design.
+                </p>
+
+                <p>
+                    In summary, while IL pre-training accelerates RL convergence for autonomous racing, achieving
+                    performance surpassing experts may depend more critically on the RL algorithm's configuration and
+                    reward design. End-to-end RL, despite its sample inefficiency, showed potential for reaching a
+                    higher performance peak in this specific setup.
+                </p>
+
+                <p>
+                    Future work can explore training the end-to-end RL policy on different maps and accounting for
+                    different types of turns an agent may encounter. Additionally, one could explore a different reward
+                    structure as we still felt there was ample room for improvement in performance. Secondly, we were
+                    curious to explore a curriculum learning approach using the expert demonstrations in order to more
+                    properly guide the policy towards peak performance. Due to time constraints, we were unable to
+                    explore these ideas and settled with simply tackling end-to-end RL and IL-RL.
+                </p>
+
+
+
+
+                <h3>References</h3>
+                <ol>
+                    <li>
+                        A. Kulkarni, J. Chrosniak, E. Ducote, F. Sauerbeck, A. Saba, U. Chirimar, J. Link, M. Behl,
+                        and M. Cellina. <em>Racecar - the dataset for high-speed autonomous racing.</em> In <strong>2023
+                            IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)</strong>, page
+                        11458–11463. IEEE,
+                        Oct. 2023. doi: <a href="https://doi.org/10.1109/iros55552.2023.10342053"
+                            target="_blank">10.1109/iros55552.2023.10342053</a>.
+                        URL: <a href="http://dx.doi.org/10.1109/IROS55552.2023.10342053"
+                            target="_blank">http://dx.doi.org/10.1109/IROS55552.2023.10342053</a>.
+                    </li>
+
+                    <li>
+                        B. D. Evans, R. Trumpp, M. Caccamo, F. Jahncke, J. Betz, H. W. Jordaan, and H. A. Engelbrecht.
+                        <em>Unifying f1tenth autonomous racing: Survey, methods and benchmarks</em>, 2024.
+                        URL: <a href="https://arxiv.org/abs/2402.18558"
+                            target="_blank">https://arxiv.org/abs/2402.18558</a>.
+                    </li>
+
+                    <li>
+                        E. Kaufmann, L. Bauersfeld, A. Loquercio, <em>et al.</em>
+                        <em>Champion-level drone racing using deep reinforcement learning.</em> <strong>Nature</strong>,
+                        620:982–987, 2023.
+                        doi: <a href="https://doi.org/10.1038/s41586-023-06419-4"
+                            target="_blank">10.1038/s41586-023-06419-4</a>.
+                        URL: <a href="https://doi.org/10.1038/s41586-023-06419-4"
+                            target="_blank">https://doi.org/10.1038/s41586-023-06419-4</a>.
+                    </li>
+
+                    <li>
+                        P. Koirala and C. Fleming. <em>F1tenth autonomous racing with offline reinforcement learning
+                            methods</em>, 2024.
+                        URL: <a href="https://arxiv.org/abs/2408.04198"
+                            target="_blank">https://arxiv.org/abs/2408.04198</a>.
+                    </li>
+
+                    <li>
+                        S. Ross, G. J. Gordon, and J. A. Bagnell.
+                        <em>A reduction of imitation learning and structured prediction to no-regret online
+                            learning.</em>
+                        In <strong>Proceedings of the 14th International Conference on Artificial Intelligence and
+                            Statistics (AISTATS)</strong>, volume 15, pages 627–635. PMLR, 2011.
+                    </li>
+
+                    <li>
+                        X. Sun, S. Yang, M. Zhou, K. Liu, and R. Mangharam.
+                        <em>Mega-dagger: Imitation learning with multiple imperfect experts</em>, 2024.
+                        URL: <a href="https://arxiv.org/abs/2303.00638"
+                            target="_blank">https://arxiv.org/abs/2303.00638</a>.
+                    </li>
+
+                    <li>
+                        X. Sun, M. Zhou, Z. Zhuang, S. Yang, J. Betz, and R. Mangharam.
+                        <em>A benchmark comparison of imitation learning-based control policies for autonomous
+                            racing.</em>
+                        In <strong>2023 IEEE Intelligent Vehicles Symposium (IV)</strong>, pages 1–5, 2023.
+                        doi: <a href="https://doi.org/10.1109/IV55152.2023.10186780"
+                            target="_blank">10.1109/IV55152.2023.10186780</a>.
+                    </li>
+
+                    <li>
+                        A. Heilmeier, A. Wischnewski, L. Hermansdorfer, J. Betz, M. Lienkamp, and B. Lohmann.
+                        <em>Minimum curvature trajectory planning and control for an autonomous race car.</em>
+                        <strong>Vehicle System Dynamics</strong>, 58(10):1497–1527, 2019.
+                        doi: <a href="https://doi.org/10.1080/00423114.2019.1631455"
+                            target="_blank">10.1080/00423114.2019.1631455</a>.
+                    </li>
+                </ol>
+
+
+
+
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer">
+        <ul class="copyright">
+            <li>&copy; 2025 Vineet Pasumarti</li>
+        </ul>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
