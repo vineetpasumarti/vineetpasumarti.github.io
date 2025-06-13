@@ -2999,3 +2999,25 @@ ul li {
 	margin-bottom: 5px;
 	margin-top: 5px;
 }
+
+.author-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-bottom: 1em;
+}
+
+.pdf-download {
+	font-size: 0.9em;
+	color: #d32f2f;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3em;
+}
+
+.pdf-download:hover {
+	text-decoration: underline;
+	color: #b71c1c;
+}
