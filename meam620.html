@@ -406,6 +406,193 @@
                 </div>
                 <!-- End of Two Column Layout -->
                 
+                <!-- PART 2: Autonomous VIO Based Quadcopter -->
+                <hr style="margin: 4em 0; border: 1px solid #ddd;">
+                
+                <div class="paper-header">
+                    <div class="paper-title">Part 2: Autonomous VIO Based Quadcopter</div>
+                    <div class="paper-subtitle">Project 3: Visual Inertial Odometry Implementation</div>
+                    <div style="font-size: 1em;"><strong>Vineet Pasumarti</strong></div>
+                </div>
+                
+                <!-- Two Column Layout for Part 2 -->
+                <div class="two-column-layout">
+                
+                <!-- Section V: Introduction and System Overview -->
+                <div class="section-title">V. Introduction and System Overview</div>
+                
+                <p>In this project, we develop a full autonomy stack that plans a path using the A* graph search algorithm, sparsifies waypoints according to the Ramer–Douglas–Peucker algorithm and generates a smooth trajectory for minimum jerk, completes the trajectory using a quadrotor PD controller, and relies solely on visual inertial odometry (VIO) using Error State Extended Kalman Filtering (ES-EKF) for on-board state estimation.</p>
+                
+                <p>The problem at hand differs from Project 1 due to our previous dependency on the VICON motion capture system to track position and orientation when we deployed to real hardware. Although position and orientation can be obtained through strapdown integration of the angular velocity and linear acceleration data from the IMU, this computation accumulates sensor biases and is prone to drift. Additionally, double-integration of accelerometer data implies the position error increases quadratically with time.</p>
+                
+                <p>We resolve this problem by implementing stereo vision in conjunction with an IMU to estimate the state using an ES-EKF. Stereo vision allows us to track features and predict the quadrotor's transformations according to feature correspondences, as well as estimate the absolute depth of a feature by measuring the disparity across rectified images from both cameras. By optimally combining our various state estimates in an ES-EKF, the addition of stereo vision will reduce the covariance of the state vector and lead to a better estimate of position and orientation, allowing for the quadrotor to navigate an environment using only on-board sensors.</p>
+                
+                <!-- Section VI: State Estimation -->
+                <div class="section-title">VI. State Estimation</div>
+                
+                <p>Previously, we relied on a ground truth mechanism to provide the state of the quadrotor. In practice, this meant tracking the position and orientation with a VICON motion capture system and processing the angular velocity and acceleration from the on-board accelerometer and gyroscope. In this project, we utilize stereo vision in conjunction with the IMU to estimate the state of the quadrotor. We achieve this by combining multiple estimates optimally using an ES-EKF.</p>
+                
+                <p>Both Extended Kalman Filters (EKF) and Unscented Kalman Filters (UKF) are standard choices for systems that adhere to nonlinear dynamics and/or nonlinear observations. The EKF is an optimal estimator for nonlinear systems up to the first order, and is preferable due to its simplicity and similarity to the standard Kalman Filter. However, the EKF requires that all components of the state be isomorphic in Euclidean vector space, such that the state vector can iteratively be summed linearly at each time step to obtain an optimal estimate. Therefore, a standard EKF cannot include orientation in the state vector as directly adding quaternions results in arbitrary 4x1 vectors. For this reason, we opt to use an ES-EKF that instead iterates upon the error state of the state vector, which can be represented in the Euclidean vector space. At each time step, we update the nominal state by propagating the dynamics of the quadrotor according to the linear acceleration and angular velocity as obtained by the IMU. We then propagate the error state covariance matrix which represents the uncertainty in our current estimation error for the position, velocity, orientation, accelerometer and gyroscope biases, and gravity vector. We optimally propagate the error state covariance matrix according to the following equation,</p>
+                
+                <p style="text-align: center;">
+                $$P=F_x P F_x^{\top}+F_i Q_i F_i^{\top}$$
+                </p>
+                
+                <p>where $F_x$ and $F_i$ are the state transition Jacobians with respect to the error and perturbation vectors, and $Q_i$ is the process noise covariance matrix. Lastly, we update our nominal state estimate and error state using an image measurement, $uv$, which is a 2D projection of a known world point in 3D. The difference between $uv$ and the transformed world point is the innovation, $I$. We then compute the Kalman Gain, $K$,</p>
+                
+                <p style="text-align: center;">
+                $$K=P H^{\top}\left(H P H^{\top}+Q\right)^{-1}$$
+                </p>
+                
+                <p>where $Q$ denotes the covariance matrix of the image measurement $uv$ and $H$ represents the measurement Jacobian. We compute the error state, $KI$, as well as update the error state covariance matrix, $P$.</p>
+                
+                <p style="text-align: center;">
+                $$P \leftarrow(I-K H) P(I-K H)^{\top}+K Q K^{\top}$$
+                </p>
+                
+                <p>This implementation of the EKF allows us to update the state of the quadrotor optimally using both visual and inertial information.</p>
+                
+                <p>When directly implementing the VIO-based estimate alongside the original project 1 code, we find that the drone often hovers adjacent to the goal location indefinitely, despite being away from the planned trajectory. We observe this in Figures VII and VIII, as the quadrotor appears to be at the goal location, yet the simulation ultimately times out as the sensor readings continue until 150 seconds.</p>
+                
+                <!-- Figure VII: Drifting trajectory -->
+                <div class="figure-container">
+                    <img src="images/drifting_150.png" alt="Drifting trajectory" style="max-width: 90%;" />
+                    <div class="figure-caption">Figure VII: The flight path of the quadrotor drifts away from the planned trajectory and incorrectly assumes it has reached the goal location. This is indicative of a faulty state estimate.</div>
+                </div>
+                
+                <!-- Figure VIII: Accelerometer data -->
+                <div class="figure-container">
+                    <img src="images/acc_150.png" alt="Accelerometer data" style="max-width: 80%;" />
+                    <div class="figure-caption">Figure VIII: The accelerometer continues to record data, implying the end condition has not been reached. We can also see that the quadrotor is stationary and hovering in place as there is no change in acceleration. This figure indicates the quadrotor is confidently estimating an incorrect state as the goal location.</div>
+                </div>
+                
+                <p>Confidently estimating an incorrect state is dangerous. We can take advantage of Kalman Filtering by artificially increasing the accelerometer and gyroscope covariance to influence the Kalman gain. Increasing the noise and random walk terms in the IMU's process noise covariance matrix, $Q_i$, effectively informs the EKF that the inertial predictions are less reliable and gives more weight to the stereo vision measurements to correct its state. We find that scaling up the IMU noise and random walk terms in the process noise covariance matrix by 9 works well in the example test cases. During the EKF update, a larger $Q_i$ due to the intentional scaling yields a larger $P$, so $K$ increases and the EKF places more weight on stereo vision measurements over the IMU prediction. This strategy shows success in the automated test cases as the quadrotor completes the desired trajectory within reasonable time and no longer hovers adjacent to the goal location indefinitely.</p>
+                
+                <!-- Section VII: Controller -->
+                <div class="section-title">VII. Controller</div>
+                
+                <p>We make an additional change to the existing code base in this project. Although we continue to implement a geometric nonlinear PD controller for the quadrotor, we modify the gains to more accurately follow the minimum jerk trajectory. We opt to use the following gains as shown in Table II, where the 1x3 vector of values are representative of the diagonal of a 3x3 matrix.</p>
+                
+                <!-- Table II: Final gains after tuning -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Gain</th>
+                                <th>Value</th>
+                                <th>Units</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>$K_p$</td>
+                                <td>[4.2, 4.2, 8.4]</td>
+                                <td>1/$s^2$</td>
+                            </tr>
+                            <tr>
+                                <td>$K_d$</td>
+                                <td>[9, 9, 7.2]</td>
+                                <td>1/$s$</td>
+                            </tr>
+                            <tr>
+                                <td>$K_R$</td>
+                                <td>[3000, 3000, 240]</td>
+                                <td>1/$s^2$</td>
+                            </tr>
+                            <tr>
+                                <td>$K_\omega$</td>
+                                <td>[300, 300, 180]</td>
+                                <td>1/$s$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-caption">Table II: Final gains after tuning</div>
+                </div>
+                
+                <p>The gains in Table II are roughly 1.2x the gains used in project 1.3. We find that the drone's tendency to undershoot the desired position is exacerbated when using an ES-EKF to fuse the IMU and stereo vision state estimates. As a result, the quadrotor initially had a tendency of colliding despite being provided an obstacle-free trajectory with generous margins (0.5m). By uniformly increasing the proportional and derivative gains, the quadrotor tracks the trajectory more aggressively without encountering oscillations. Scaling up proportional gains increases the natural frequency and therefore reduces position errors faster. Uniform scaling of proportional and derivative gains ensures the damping ratio remains constant, as the damping behavior was acceptable in project 1.</p>
+                
+                <!-- Section VIII: Trajectory Generation -->
+                <div class="section-title">VIII. Trajectory Generation</div>
+                
+                <p>We continue to implement a fully-constrained piecewise trajectory of minimum jerk. We find that reducing the voxel grid resolution to 0.2m and maintaining a margin of 0.57m leads to effective path planning and trajectory generation. In addition, we reduce the epsilon parameter of the Ramer-Douglas-Peucker (RDP) sparsifying algorithm from 0.1m to 0.05m. Reducing this threshold maintains more waypoints in the sparse path and enforces a stricter trajectory. We find this to be useful for longer horizon path planning. Incidentally, we also find a smaller margin of 0.5m to be most effective for long horizon path planning as well, and opt to alternate between a margin of 0.5m and 0.57m depending on the number of waypoints generated after RDP sparsification. We find success in the test cases by utilizing a 0.5m margin on paths that are generated with 35 or more waypoints, and a 0.57m margin otherwise.</p>
+                
+                <!-- Section IX: Extra Credit: Overview -->
+                <div class="section-title">IX. Extra Credit: Overview</div>
+                
+                <p>In the extra-credit section, we replace the global planner with an online replanning pipeline that leverages a local occupancy map due to intentionally limited sensor range. This section emulates real-world exploration and navigation for a robot in unknown environments as it discovers new paths to reach the end destination as new information becomes available.</p>
+                
+                <p>First, we determine a local goal in the cropped occupancy map by drawing a straight line towards the global goal up to a distance of 7.5 meters, as designated by the fixed planning horizon. We generate a trajectory to reach the local goal by using A* graph search as well as RDP sparsification but we do not solve for a piecewise fully-constrained minimum jerk trajectory, differing from our practice in project 3. Rather, we implement WaypointTraj from project 1.1, simplifying the trajectory into piecewise linear segments of 2.75 m/s constant velocity. For each waypoint, we compute a vector, length, direction, duration, and segment start times as the cumulative sum of previous durations. Completion time as a secondary objective incentivizes our use of simple trajectories when performing online replanning.</p>
+                
+                <p>The sensor range is limited to 5 meters. As our local planning horizon is 7.5 meters, we risk defining a local goal that leads to collisions along the trajectory. To address this risk, each control loop runs a collision check that samples future positions in intervals of 0.02 seconds along the current trajectory. Replanning is triggered when a future collision is detected or when 20 time steps have passed. During replanning, we define the start of the new trajectory as the current state and recompute waypoints and linear segments towards a new local goal, once again 7.5 meters in the direction of the global goal.</p>
+                
+                <!-- Section X: Extra Credit: System Performance and Failure Cases -->
+                <div class="section-title">X. Extra Credit: System Performance and Failure Cases</div>
+                
+                <p>The difference in flight times for the online replanning method against the global planner in project 3 are showcased in a variety of test cases in Table III.</p>
+                
+                <!-- Table III: Comparison of planners -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Map</th>
+                                <th>Online Replanner</th>
+                                <th>Global Planner</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Maze</td>
+                                <td>9.08 sec</td>
+                                <td>7.92 sec</td>
+                            </tr>
+                            <tr>
+                                <td>OverUnder</td>
+                                <td>12.87 sec</td>
+                                <td>11.04 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Window</td>
+                                <td>14.37 sec</td>
+                                <td>8.88 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Slalom</td>
+                                <td>Fail</td>
+                                <td>19.1 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Stairwell</td>
+                                <td>13.52 sec</td>
+                                <td>11.88 sec</td>
+                            </tr>
+                            <tr>
+                                <td>Switchback</td>
+                                <td>30.02 sec</td>
+                                <td>24.29 sec</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-caption">Table III: Comparison of online replanner and global planner according to flight times to complete the automated test cases</div>
+                </div>
+                
+                <p>We can see how the online replanning is slower to complete each map compared to the vanilla implementation of the global planner in project 3. This is in accordance with our expectations. A limited planning horizon results in zig-zag and inopportune paths that are longer than the trajectory generated by the global planner. Additionally, we intentionally generate a piecewise linear trajectory with no acceleration, deceleration or smoothing between segments. Despite making the trajectory simpler to predict and implement for collision avoidance, the lack of transitions makes the trajectory harder for the quadrotor to follow and adds time compared to a globally planned piecewise polynomial, as can be seen in Figure IX.</p>
+                
+                <!-- Figure IX: Commands tracking -->
+                <div class="figure-container">
+                    <img src="images/comms_ec.png" alt="Commands tracking" />
+                    <div class="figure-caption">Figure IX: The existing controller displays subpar performance when tracking commands on the piecewise linear trajectory and is especially visible in the velocity vs time plot.</div>
+                </div>
+                
+                <!-- Figure X: Trajectory overshoot -->
+                <div class="figure-container">
+                    <img src="images/traj_ec.png" alt="Trajectory overshoot" style="max-width: 70%;" />
+                    <div class="figure-caption">Figure X: The quadrotor overshoots position due to the piecewise trajectory being composed of many short linear segments with no smooth transitions.</div>
+                </div>
+                
+                </div>
+                <!-- End of Two Column Layout for Part 2 -->
+                
             </div>
         </section>
     </div>
