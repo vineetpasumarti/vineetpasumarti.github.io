@@ -1,0 +1,468 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Quadcopter Navigation Stack | Vineet Pasumarti</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <style>
+        #main .container {
+            text-align: left;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+</head>
+
+<body class="is-preload">
+
+    <!-- Header -->
+    <div id="header">
+        <div class="top">
+            <nav id="nav">
+                <ul>
+                    <li><a href="index.html#about" id="about-link"><span class="icon solid fa-user">Vineet
+                                Pasumarti</span></a></li>
+                    <li><a href="index.html#projects" id="portfolio-link"><span
+                                class="icon solid fa-th">Projects</span></a></li>
+                    <li><a href="index.html#resume" id="resume-link"><span
+                                class="icon solid fa-file">Resume/CV</span></a></li>
+                    <li><a href="index.html#contact" id="contact-link"><span
+                                class="icon solid fa-envelope">Contact</span></a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="bottom">
+            <ul class="icons">
+                <li><a href="https://github.com/vineetpasumarti" class="icon brands fa-github"><span
+                            class="label">Github</span></a></li>
+                <li><a href="https://www.linkedin.com/in/vineetpasumarti/" class="icon brands fa-linkedin"><span
+                            class="label">LinkedIn</span></a></li>
+                <li><a href="index.html#contact" class="icon solid fa-envelope"><span class="label">Email</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div id="main">
+        <section class="three">
+            <div class="container">
+                <header>
+                    <h2 class="alt"><strong>Autonomous VIO-Based Quadrotor Navigation and Control Stack</strong></h2>
+                </header>
+
+                <p><strong>Authors:</strong> Vineet Pasumarti, Ethan Senatore, Allen Zhou, Raymond Yang</p>
+
+                <div style="text-align: center;">
+                    <img src="images/vioquad_cover.gif" alt="Project Image"
+                        style="min-width: 50%; border-radius: 5px; margin-bottom: 1em;" />
+                </div>
+
+                <p>The objective of this project was to deploy a quadrotor controller, waypoint planner, and trajectory
+                    generator on real hardware. We followed up with a second part to subtract the reliance on a VICON
+                    motion capture
+                    system by relying solely on visual inertial odometry (VIO) and an Error State Extended Kalman Filter
+                    (ES-EKF) for on-board
+                    state estimation. </p>
+
+                <h3>Part 1</h3>
+                <p>In our first lab session, we implemented both a controller and waypoint planner on a CrazyFlie 2.0.
+                    We first validated the quadrotor's stability with a hover, then tuned our controller's $z$ position
+                    gain using an altitude step response. We then tuned $x$ and $y$ position gains using a lateral step
+                    response. We evaluated our controller against a test ``box'' maneuver, and with our extra lab time
+                    we wrote our own test waypoints to fly the drone in a rectangular spiral and land.
+                </p>
+
+                <p>In our second lab session, we deployed our stack on the CrazyFlie to plan a path through a maze and
+                    execute the resulting trajectory. This required us to re-evaluate our gains and fine-tune the
+                    margins of our occupancy map to ensure the safe traversal of the drone from start to finish.
+                    Following both sessions, we were able to demonstrate successful control and flight path generation.
+                    Tuning parameters on real hardware allowed us to be less risk-averse and execute more aggressive
+                    trajectories that navigate the cluttered environment faster and smoother.</p>
+
+                <p>
+                    The CrazyFlie 2.0 is a palm-sized quadrotor that we cover with markers to be tracked by a VICON
+                    system. VICON is a motion capture system that uses multiple infrared cameras to track the position
+                    and orientation of an object. The quadrotor's position and orientation are tracked by the VICON and
+                    the angular velocity and acceleration from the onboard accelerometer and gyroscope are all radio
+                    transmitted to the lab computers. This information is fed to our controller as an input, which runs
+                    on the lab computers to generate a desired state and the necessary motor commands are then
+                    transmitted back to the quadrotor.
+                </p>
+
+                <h3>Methodology</h3>
+
+                <p>The controller we elected to use for our experiments was a geometric nonlinear controller. In an
+                    intuitive sense, the controller is structured around the idea of orienting the quadrotor's z-axis in
+                    the direction we desire to move to. This controller allows for aggressive maneuvers and requires
+                    fine-tuning of both the damping and gain. Using the Project 1.1 handout as a reference, we will
+                    define the theoretical framework of the controller. We start with the PD controller equation: </p>
+
+                <p>
+                    \[\ddot{r}^{des} = \ddot{r}_T - K_d(\dot{r}-\dot{r}_T) -K_p(r-r_T)\]
+                </p>
+
+                <p>
+                    To compute the inputs $u_1$ and $u_2$ in order to generate our desired acceleration we use the
+                    following equation.
+                </p>
+
+                <p>
+                    \[m\ddot{r}^{des} + \begin{bmatrix}
+                    0\\0\\mg
+                    \end{bmatrix} = u_1R\begin{bmatrix}
+                    0\\0\\1
+                    \end{bmatrix}\]
+                </p>
+
+                <p>We can identify that the left hand side of the equation is simply the desired force combined with the
+                    gravitational force. Thus, we can simplify the equation in order to solve for $u_1$ as follows:</p>
+
+                <p>\[F^{des} = m\ddot{r}^{des} + \begin{bmatrix}
+                    0\\0\\1
+                    \end{bmatrix}\]
+                    \[u_1 = R\begin{bmatrix}
+                    0\\0\\1
+                    \end{bmatrix}F^{des}\]:</p>
+
+                <p>Calculating $u_2$ requires a slightly more complex process. Based off of the previously laid out
+                    intuition, we seek to align the thrust vector with the quadrotor's z-axis. Thus,</p>
+
+                <p>\[c_3^{des} = \frac{F^{des}}{||F^{des}||}\]</p>
+
+                <p>
+                    Next, we seek to align the quadrotor's y-axis with the desired yaw direction while maintaining the
+                    orthogonality between the y and x-axes. To do so, we first define the following term:
+                </p>
+
+                <p>
+                    \[a_\psi = \begin{bmatrix}
+                    cos\psi_T\\sin\psi_T\\0
+                    \end{bmatrix}\]
+                </p>
+
+                <p>
+                    this vector represents the yaw direction in the world x-y plane. Next, we can calculate the y-axis
+                    vector as follows:
+                </p>
+
+                <p>
+                    \[c_2^{des} = \frac{c_3^{des}\times a_\psi}{||c_3^{des}\times a_\psi||}\]
+                </p>
+
+                <p>
+                    Finally, we can define the desired $R^{des}$
+                </p>
+
+                <p>
+                    \[R^{des} = \begin{bmatrix}
+                    c_2^{des} \times c_3^{des}, & c_2^{des}, & c_3^{des}
+                    \end{bmatrix}\]
+                </p>
+
+                <p>
+                    This rotation matrix represents the desired orientation we wish to achieve at a given time step. The
+                    next step is to measure the error between our current and desired orientation.
+                </p>
+
+                <p>
+                    \[e_R = \frac{1}{2}(R^{des^T}R - R^TR^{des})^\vee\]
+                </p>
+
+                <p>
+                    Another aspect of control we may care about is the difference between our desired and current
+                    angular velocities. We can easily define this term as:
+                </p>
+
+                <p>
+                    \[e_\omega = \omega - \omega^{des}\]
+                </p>
+
+                <p>
+                    Finally, we can define $u_2$ as:
+                </p>
+
+                <p>
+                    \[u_2 = I(-K_Re_R - K_\omega e_\omega)\]
+                </p>
+
+                <p>
+                    Using this controller, we have four tunable gains that we had to first meticulously tune in
+                    simulation and then finalize in our experiments. After tuning our controller, in simulation, lab 1,
+                    and lab 2 we settled on the following configuration. The 1x3 vector listed in Table \ref{tab:Tune
+                    table} represents the diagonal of a 3x3 matrix.
+                </p>
+
+                <p>
+                    Intuitively, we interpreted the gains as ways to answer four different questions. Starting with
+                    $K_p$, we viewed this metric as measuring `how important is it to to achieve a desired position?'.
+                    $K_d$ is the measure of `how fast do you want to get to the desired position?'. Similarly, we can
+                    say that $K_R$ measures `how important is it to achieve a desired orientation?' and $K_\omega$
+                    measures `how fast do you want to achieve the desired orientation?'.This intuition provided us a
+                    steady foundation to work off of and fine tune our parameters. It was fairly easy to tinker with
+                    each gain to reach our desired performance. However, we immediately noticed that testing on hardware
+                    required us to scale down our gains by around 30$\%$. Additional fine-tuning during lab 1 and 2
+                    narrowed us down to our final parameters. We can attribute the differences in gains due to model
+                    mismatch, lack of simulation fidelity, and flaws in our controller implementation.
+                </p>
+
+                <p>
+                    Figure \ref{fig:tuning tests} shows an experiment we ran to tune our y-direction gain and damping
+                    parameters. Based on the plots, we can determine that our controller demonstrates a settling time of
+                    around 2 s, a rise time of around 1.1 s, a steady state error of around 2$\%$, and a damping ratio
+                    of around 0.4. This experiment revealed a few flaws in our controller. First and foremost, the
+                    controller is underdamped and takes fairly long to settle into a steady state. Secondly, we
+                    immediately recognized a glaring issue in our z-direction tuning. At first, we attributed the
+                    discrepancy in desired and actual position as model mismatch, but in lab 2 we retuned our z gains to
+                    fix this issue. The process of fine-tuning the gains was straightforward as we would conduct a test,
+                    adjust the parameters, and repeat until we were satisfied.
+                </p>
+
+                <h3>Trajectory Generation</h3>
+
+                <p>
+                    In this section, we discuss the approach for the generation of a piecewise trajectory connecting the
+                    waypoints from start to target for an input map in the discretized occupancy grid, as well as a
+                    method that generates an optimized flight path that aligns with the quadrotor's maneuverability
+                    while maintaining collision-free.
+                </p>
+
+                <p>
+                    Starting with the default \texttt{occupancy\_map} file where a 3D occupancy map is generated from
+                    the given map environment by splitting the space into a grid of voxels at a given axial resolution,
+                    the occupancy map consists of voxels that are marked ``occupied'' when they intersect an obstacle or
+                    hit the boundary within the workspace, and others representing the discretized waypoints that are
+                    open access to the graph search planner.
+                </p>
+
+                <p>
+                    Then, the \texttt{graph\_search} treats each unoccupied voxel from the previous map as a node in a
+                    graph, which is able to develop up to 26 edges connecting its neighbors in 3D. During the lab
+                    execution, an A* graph search algorithm is preferred over the plain Dijkstra method, since it
+                    incorporates a heuristic measure, which is the straight-line distance to the goal, to guide the
+                    search more efficiently. This heuristic attracts the exploration toward the target node,
+                    significantly reducing the exploration time to find an optimal path compared to Dijkstra, which
+                    blindly develops its path outward. To conclude, the cost of moving between neighboring nodes is the
+                    Euclidean distance [\(l_2\ norm\)], while an admissible heuristic \(h(n)\) estimates the cost from
+                    the current node to the goal.
+                </p>
+
+                <p>
+                    \[
+                    c(\text{current}, \text{neighbor}) \;=\; \bigl\lVert \text{neighbor} - \text{current} \bigr\rVert,
+                    \]
+                    \[
+                    h(n) \;=\; \bigl\lVert n - \text{goal} \bigr\rVert.
+                    \]
+                    The total cost at each node is therefore:
+                    \[
+                    f(n) \;=\; g(n) + h(n),
+                    \]
+                    where \(g(n)\) represents the cost so far from the start node to the current.
+                </p>
+
+                <p>
+                    After running A*, we apply the Ramer-Douglas-Peucker (RDP) algorithm to reduce redundant points
+                    along nearly straight segments. An RDP tolerance of
+                    \(\varepsilon = 0.1\,\text{m}\) is used, which prunes interior waypoints whose perpendicular
+                    distance to the line between the first and last point in a subset is below \(\varepsilon\). The
+                    outcome is a sparser set of critical waypoints, preserving the overall path shape but removing
+                    unnecessary intermediate points that might complicate maneuvering along the trajectory. We construct
+                    a piecewise linear position trajectory to connect along each optimized waypoint, commanding the
+                    quadrotor to operate from start to goal. The position where each single segment ends is:
+                </p>
+
+                <p>
+                    \[
+                    \mathbf{x}(t) \;=\; \mathbf{p}_i
+                    \;+\; \bigl(\mathbf{v}_i\bigr)\,\bigl(t - t_{\mathrm{start},\,i}\bigr),
+                    \quad t \in [t_{\mathrm{start},\,i},\, t_{\mathrm{start},\,i} + T_i],
+                    \]
+                    where \(\mathbf{v}_i\) is a constant velocity vector for segment \(i\), defined by
+                    \[
+                    \mathbf{v}_i \;=\; v_i \,\frac{\mathbf{p}_{i+1} - \mathbf{p}_i}{\|\mathbf{p}_{i+1} -
+                    \mathbf{p}_i\|}.
+                    \]
+                </p>
+
+                <p>
+                    Hence, velocity is constant in each segment, and the position changes linearly from \(\mathbf{p}_i\)
+                    to \(\mathbf{p}_{i+1}\). Once \(t\) exceeds \(t_{\mathrm{start},i}+T_i\), we switch to the next
+                    segment \(i+1\) until the Crazyflie hits the target. In our code, \(v_i\) is chosen based on the
+                    segment length and the angular change between consecutive segments (with mild speed reductions if
+                    there is a sharp turn). The total trajectory time becomes
+                </p>
+
+                <p>
+                    \[
+                    T_{\mathrm{total}} \;=\; \sum_{i=0}^{N-1} T_i.
+                    \]
+                    where a constant speed \(v_i\) for each segment
+                    \(\bigl[\mathbf{p}_i \rightarrow \mathbf{p}_{i+1}\bigr]\) is:
+                    \[
+                    T_i \;=\; \frac{\|\mathbf{p}_{i+1} - \mathbf{p}_i\|}{v_i}.
+                    \]
+                </p>
+
+                <p>
+                    Since each segment uses constant velocity, the overall trajectory is only continuous in position
+                    (\(C^0\)-continuous); velocity changes instantaneously at segment boundaries. However, we limit the
+                    speed of the Crazyflie to under 1 m/s, which prevents aggressive maneuvering during the tests. By
+                    including an obstacle inflation margin of \(0.2\,\text{m}\) and a resolution of the occupancy grid
+                    of \(\Delta x = \Delta y = \Delta z = 0.25\,\text{m}\), we ensure that the resulting waypoints
+                    remain safely away from obstacles while keeping a low computational load. Hence, while the
+                    piecewise-linear approach does not strictly enforce higher-order continuity, it is straightforward
+                    to implement, fast to compute, and guarantees collision-free given the flight map. The plots below
+                    show (1) discrete waypoints and path, (2) 3D quadrotor trajectory, and (3) position, velocity, and
+                    acceleration log in the map \texttt{maze\_2025\_1}.
+                </p>
+
+                <h3>Maze Flight Experiments</h3>
+
+                <p>
+                    We observe discrepancies between the planned trajectory and actual flight path in all three maps,
+                    especially during sharp turns and maneuevers around obstacles. One possible cause for the tracking
+                    error comes from the motor thrust limitations. The maximum thrust capabilities of the flight motors
+                    restricted the drone's response to control inputs during high-demand maneuvers, leading to larger
+                    than anticipated deviations from the planned path. In addition, interruptions in positional data due
+                    to occlusions of VICON cameras by obstacles resulted in inaccurate state estimations, causing the
+                    drone to stray off course. The discrepancies between the simulated and actual weight of the drone
+                    can be another cause, it led to inadequate PID controller settings and impacting the drone's dynamic
+                    response to control commands. To achieve safe trajectories, we can directly adjust the trajectory
+                    planning algorithm to include larger safety margins around obstacles, accounting for potential
+                    hardware limitation during path planning. We can also further adjust PID parameters using actual
+                    drone weight data.
+                </p>
+
+                <p>
+                    Since we have already observed undesired flight paths, it can be dangerous to make the trajectory
+                    more aggressive. The limited maximum thrust of the flight motors restricted the drone's ability to
+                    execute rapid or steep maneuvers, essential for more aggressive trajectories. The observed
+                    inaccuracies in positional data due to VICON camera occlusions and the lack of precise PID tuning
+                    for the actual drone weight meant that increasing the aggressiveness of the trajectories could lead
+                    to higher risks of collision or loss of control.
+                </p>
+
+                <p>
+                    To improve the system reliability and speed, one change we can make is tune the PID using real world
+                    data to reduce the discrepancy between simulated trajectory and actual pathways. A more robust
+                    trajectory planning algorithm can also improve the system reliability and speed, with higher
+                    dimension spline fitting, the trajectory can be smooth and reduce the potential issue with motor
+                    torque limitations. Incorporate higher resolution in path planning is another effective approach to
+                    enhance both the speed and reliability of the drone system. This allows the trajectory to be
+                    optimized at a more detailed level, enabling smoother transitions and tighter navigation around
+                    obstacles.
+                </p>
+
+                <p>
+                    If we had one more session in the lab to do something interesting, it will be interesting to try
+                    implementing more advanced control techniques with PID controller parameters dynamically based on
+                    observed performance metrics and environmental conditions encountered during flight. The goal would
+                    be to see how well the drone can optimize its flight stability and accuracy in response to
+                    dynamically changing conditions within the maze, potentially leading to more reliable and efficient
+                    navigation.
+                </p>
+
+
+
+
+                <h3>References</h3>
+                <ol>
+                    <li>
+                        A. Kulkarni, J. Chrosniak, E. Ducote, F. Sauerbeck, A. Saba, U. Chirimar, J. Link, M. Behl,
+                        and M. Cellina. <em>Racecar - the dataset for high-speed autonomous racing.</em> In <strong>2023
+                            IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)</strong>, page
+                        11458–11463. IEEE,
+                        Oct. 2023. doi: <a href="https://doi.org/10.1109/iros55552.2023.10342053"
+                            target="_blank">10.1109/iros55552.2023.10342053</a>.
+                        URL: <a href="http://dx.doi.org/10.1109/IROS55552.2023.10342053"
+                            target="_blank">http://dx.doi.org/10.1109/IROS55552.2023.10342053</a>.
+                    </li>
+
+                    <li>
+                        B. D. Evans, R. Trumpp, M. Caccamo, F. Jahncke, J. Betz, H. W. Jordaan, and H. A. Engelbrecht.
+                        <em>Unifying f1tenth autonomous racing: Survey, methods and benchmarks</em>, 2024.
+                        URL: <a href="https://arxiv.org/abs/2402.18558"
+                            target="_blank">https://arxiv.org/abs/2402.18558</a>.
+                    </li>
+
+                    <li>
+                        E. Kaufmann, L. Bauersfeld, A. Loquercio, <em>et al.</em>
+                        <em>Champion-level drone racing using deep reinforcement learning.</em> <strong>Nature</strong>,
+                        620:982–987, 2023.
+                        doi: <a href="https://doi.org/10.1038/s41586-023-06419-4"
+                            target="_blank">10.1038/s41586-023-06419-4</a>.
+                        URL: <a href="https://doi.org/10.1038/s41586-023-06419-4"
+                            target="_blank">https://doi.org/10.1038/s41586-023-06419-4</a>.
+                    </li>
+
+                    <li>
+                        P. Koirala and C. Fleming. <em>F1tenth autonomous racing with offline reinforcement learning
+                            methods</em>, 2024.
+                        URL: <a href="https://arxiv.org/abs/2408.04198"
+                            target="_blank">https://arxiv.org/abs/2408.04198</a>.
+                    </li>
+
+                    <li>
+                        S. Ross, G. J. Gordon, and J. A. Bagnell.
+                        <em>A reduction of imitation learning and structured prediction to no-regret online
+                            learning.</em>
+                        In <strong>Proceedings of the 14th International Conference on Artificial Intelligence and
+                            Statistics (AISTATS)</strong>, volume 15, pages 627–635. PMLR, 2011.
+                    </li>
+
+                    <li>
+                        X. Sun, S. Yang, M. Zhou, K. Liu, and R. Mangharam.
+                        <em>Mega-dagger: Imitation learning with multiple imperfect experts</em>, 2024.
+                        URL: <a href="https://arxiv.org/abs/2303.00638"
+                            target="_blank">https://arxiv.org/abs/2303.00638</a>.
+                    </li>
+
+                    <li>
+                        X. Sun, M. Zhou, Z. Zhuang, S. Yang, J. Betz, and R. Mangharam.
+                        <em>A benchmark comparison of imitation learning-based control policies for autonomous
+                            racing.</em>
+                        In <strong>2023 IEEE Intelligent Vehicles Symposium (IV)</strong>, pages 1–5, 2023.
+                        doi: <a href="https://doi.org/10.1109/IV55152.2023.10186780"
+                            target="_blank">10.1109/IV55152.2023.10186780</a>.
+                    </li>
+
+                    <li>
+                        A. Heilmeier, A. Wischnewski, L. Hermansdorfer, J. Betz, M. Lienkamp, and B. Lohmann.
+                        <em>Minimum curvature trajectory planning and control for an autonomous race car.</em>
+                        <strong>Vehicle System Dynamics</strong>, 58(10):1497–1527, 2019.
+                        doi: <a href="https://doi.org/10.1080/00423114.2019.1631455"
+                            target="_blank">10.1080/00423114.2019.1631455</a>.
+                    </li>
+                </ol>
+
+
+
+
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer">
+        <ul class="copyright">
+            <li>&copy; 2025 Vineet Pasumarti</li>
+        </ul>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
