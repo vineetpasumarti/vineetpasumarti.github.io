@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Project 1.4 Crazyflie Lab | Vineet Pasumarti</title>
+    <title>Autonomous VIO-Based Quadrotor Navigation | Vineet Pasumarti</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="assets/css/main.css" />
@@ -11,107 +11,96 @@
             text-align: left;
         }
         
-        .paper-header {
-            text-align: center;
-            margin-bottom: 2em;
-        }
-        
-        .paper-title {
-            font-size: 1.8em;
-            font-weight: bold;
-            margin-bottom: 0.5em;
-        }
-        
-        .paper-subtitle {
-            font-size: 1.2em;
-            margin-bottom: 1em;
-        }
-        
-        .authors-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1em;
-            text-align: center;
-            margin-bottom: 2em;
-        }
-        
-        .section-title {
-            font-size: 1.3em;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 2em;
-            margin-bottom: 1em;
-            text-transform: uppercase;
-        }
-        
-        .subsection-title {
-            font-size: 1.1em;
-            font-style: italic;
-            margin-top: 1.5em;
-            margin-bottom: 0.8em;
-        }
-        
-        .two-column-layout {
-            column-count: 2;
-            column-gap: 2em;
-            text-align: justify;
-        }
-        
-        .figure-container {
-            text-align: center;
-            margin: 2em 0;
-            break-inside: avoid;
-        }
-        
-        .figure-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-        
-        .figure-caption {
-            font-size: 0.9em;
-            font-style: italic;
-            margin-top: 0.5em;
-            text-transform: uppercase;
-        }
-        
-        .table-container {
-            margin: 2em auto;
-            text-align: center;
-            break-inside: avoid;
-        }
-        
-        table {
-            margin: 0 auto;
-            border-collapse: collapse;
-            width: auto;
-        }
-        
-        table th, table td {
-            border: 1px solid #ccc;
-            padding: 8px 12px;
-            text-align: center;
-        }
-        
-        table th {
+        .pdf-link {
+            display: inline-flex;
+            align-items: center;
+            margin: 1em 0;
+            padding: 0.8em 1.5em;
             background-color: #f5f5f5;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.3s ease;
         }
         
-        .table-caption {
+        .pdf-link:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .pdf-link i {
+            margin-right: 0.5em;
+            color: #d32f2f;
+        }
+        
+        .project-overview {
+            margin: 2em 0;
+            line-height: 1.8;
+        }
+        
+        .key-features {
+            background-color: #f9f9f9;
+            padding: 1.5em;
+            border-radius: 8px;
+            margin: 2em 0;
+        }
+        
+        .key-features h3 {
+            margin-bottom: 1em;
+            color: #333;
+        }
+        
+        .key-features ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .key-features li {
+            padding: 0.5em 0;
+            padding-left: 1.5em;
+            position: relative;
+        }
+        
+        .key-features li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .results-section {
+            margin: 2em 0;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2em;
+            margin: 2em 0;
+        }
+        
+        .result-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5em;
+            text-align: center;
+        }
+        
+        .result-card img {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-bottom: 1em;
+        }
+        
+        .result-card h4 {
+            margin-bottom: 0.5em;
+            color: #333;
+        }
+        
+        .result-card p {
             font-size: 0.9em;
-            font-style: italic;
-            margin-top: 0.5em;
-            text-transform: uppercase;
-        }
-        
-        @media screen and (max-width: 768px) {
-            .authors-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .two-column-layout {
-                column-count: 1;
-            }
+            color: #666;
         }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -160,252 +149,97 @@
     <div id="main">
         <section class="three">
             <div class="container">
-                
-                <!-- Paper Header -->
-                <div class="paper-header">
-                    <div class="paper-title">Project 1.4 Crazyflie Lab</div>
-                    <div class="paper-subtitle">MEAM 6200: Advanced Robotics (Spring 2025)</div>
-                    <div style="font-size: 1em;">March 26, 2025</div>
+                <header>
+                    <h2 class="alt"><strong>Autonomous VIO-Based Quadrotor Navigation and Control Stack</strong></h2>
+                    <p style="margin-top: 0.5em; color: #666;">MEAM 6200: Advanced Robotics | Spring 2025</p>
+                </header>
+
+                <p><strong>Team:</strong> Vineet Pasumarti, Ethan Senatore, Allen Zhou, Raymond Yang</p>
+
+                <!-- PDF Links -->
+                <div style="display: flex; gap: 1em; flex-wrap: wrap;">
+                    <a href="assets/pdf/Crazyflie_Lab_Report.pdf" class="pdf-link" target="_blank">
+                        <i class="fas fa-file-pdf fa-lg"></i>
+                        <span>Part 1: Crazyflie Lab Report (PDF)</span>
+                    </a>
+                    <a href="assets/pdf/VIO_Quadcopter_Report.pdf" class="pdf-link" target="_blank">
+                        <i class="fas fa-file-pdf fa-lg"></i>
+                        <span>Part 2: VIO Implementation Report (PDF)</span>
+                    </a>
                 </div>
-                
-                <!-- Authors -->
-                <div class="authors-grid">
-                    <div><strong>Ethan Senatore</strong></div>
-                    <div><strong>Vineet Pasumarti</strong></div>
-                    <div><strong>Allen Zhou</strong></div>
-                    <div><strong>Raymond Yang</strong></div>
-                </div>
-                
+
                 <!-- Cover Image -->
                 <div style="text-align: center; margin: 2em 0;">
-                    <img src="images/vioquad_cover.gif" alt="Project Cover Image"
-                        style="max-width: 60%; border-radius: 5px;" />
+                    <img src="images/vioquad_cover.gif" alt="VIO Quadcopter Navigation"
+                        style="max-width: 70%; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
                 </div>
-                
-                <!-- Section I: System Overview -->
-                <div class="section-title">I. System Overview</div>
-                
-                <p>The objective of this lab was to deploy a quadrotor controller, waypoint planner, and trajectory generator on real hardware.</p>
-                
-                <p>In our first lab session, we implemented both a controller and waypoint planner on a CrazyFlie 2.0. We first validated the quadrotor's stability with a hover, then tuned our controller's $z$ position gain using an altitude step response. We then tuned $x$ and $y$ position gains using a lateral step response. We evaluated our controller against a test "box" maneuver, and with our extra lab time we wrote our own test waypoints to fly the drone in a rectangular spiral and land.</p>
-                
-                <p>In our second lab session, we deployed our stack on the CrazyFlie to plan a path through a maze and execute the resulting trajectory. This required us to re-evaluate our gains and fine-tune the margins of our occupancy map to ensure the safe traversal of the drone from start to finish. Following both sessions, we were able to demonstrate successful control and flight path generation. Tuning parameters on real hardware allowed us to be less risk-averse and execute more aggressive trajectories that navigate the cluttered environment faster and smoother.</p>
-                
-                <p>The CrazyFlie 2.0 is a palm-sized quadrotor that we cover with markers to be tracked by a VICON system. VICON is a motion capture system that uses multiple infrared cameras to track the position and orientation of an object. The quadrotor's position and orientation are tracked by the VICON and the angular velocity and acceleration from the onboard accelerometer and gyroscope are all radio transmitted to the lab computers. This information is fed to our controller as an input, which runs on the lab computers to generate a desired state and the necessary motor commands are then transmitted back to the quadrotor.</p>
-                
-                <!-- Two Column Layout Starts Here -->
-                <div class="two-column-layout">
-                
-                <!-- Section II: Methods -->
-                <div class="section-title">II. Methods</div>
-                
-                <p>The controller we elected to use for our experiments was a geometric nonlinear controller. In an intuitive sense, the controller is structured around the idea of orienting the quadrotor's z-axis in the direction we desire to move to. This controller allows for aggressive maneuvers and requires fine-tuning of both the damping and gain. Using the Project 1.1 handout as a reference, we will define the theoretical framework of the controller. We start with the PD controller equation:</p>
-                
-                <p style="text-align: center;">
-                $$\ddot{r}^{des} = \ddot{r}_T - K_d(\dot{r}-\dot{r}_T) -K_p(r-r_T)$$
-                </p>
-                
-                <p>To compute the inputs $u_1$ and $u_2$ in order to generate our desired acceleration we use the following equation:</p>
-                
-                <p style="text-align: center;">
-                $$m\ddot{r}^{des} + \begin{bmatrix} 0\\0\\mg \end{bmatrix} = u_1R\begin{bmatrix} 0\\0\\1 \end{bmatrix}$$
-                </p>
-                
-                <p>We can identify that the left hand side of the equation is simply the desired force combined with the gravitational force. Thus, we can simplify the equation in order to solve for $u_1$ as follows:</p>
-                
-                <p style="text-align: center;">
-                $$F^{des} = m\ddot{r}^{des} + \begin{bmatrix} 0\\0\\mg \end{bmatrix}$$
-                $$u_1 = \begin{bmatrix} 0\\0\\1 \end{bmatrix}^T R^T F^{des}$$
-                </p>
-                
-                <p>Calculating $u_2$ requires a slightly more complex process. Based off of the previously laid out intuition, we seek to align the thrust vector with the quadrotor's z-axis. Thus,</p>
-                
-                <p style="text-align: center;">
-                $$c_3^{des} = \frac{F^{des}}{||F^{des}||}$$
-                </p>
-                
-                <p>Next, we seek to align the quadrotor's y-axis with the desired yaw direction while maintaining the orthogonality between the y and x-axes. To do so, we first define the following term:</p>
-                
-                <p style="text-align: center;">
-                $$a_\psi = \begin{bmatrix} \cos\psi_T\\\sin\psi_T\\0 \end{bmatrix}$$
-                </p>
-                
-                <p>this vector represents the yaw direction in the world x-y plane. Next, we can calculate the y-axis vector as follows:</p>
-                
-                <p style="text-align: center;">
-                $$c_2^{des} = \frac{c_3^{des}\times a_\psi}{||c_3^{des}\times a_\psi||}$$
-                </p>
-                
-                <p>Finally, we can define the desired $R^{des}$</p>
-                
-                <p style="text-align: center;">
-                $$R^{des} = \begin{bmatrix} c_2^{des} \times c_3^{des}, & c_2^{des}, & c_3^{des} \end{bmatrix}$$
-                </p>
-                
-                <p>This rotation matrix represents the desired orientation we wish to achieve at a given time step. The next step is to measure the error between our current and desired orientation.</p>
-                
-                <p style="text-align: center;">
-                $$e_R = \frac{1}{2}(R^{des^T}R - R^TR^{des})^\vee$$
-                </p>
-                
-                <p>Another aspect of control we may care about is the difference between our desired and current angular velocities. We can easily define this term as:</p>
-                
-                <p style="text-align: center;">
-                $$e_\omega = \omega - \omega^{des}$$
-                </p>
-                
-                <p>Finally, we can define $u_2$ as:</p>
-                
-                <p style="text-align: center;">
-                $$u_2 = I(-K_Re_R - K_\omega e_\omega)$$
-                </p>
-                
-                <p>Using this controller, we have four tunable gains that we had to first meticulously tune in simulation and then finalize in our experiments. After tuning our controller, in simulation, lab 1, and lab 2 we settled on the following configuration. The 1x3 vector listed in Table I represents the diagonal of a 3x3 matrix.</p>
-                
-                <!-- Table I: Finalized gain values -->
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Gain</th>
-                                <th>Value</th>
-                                <th>Units</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>$K_p$</td>
-                                <td>[2.45, 2.45, 10.5]</td>
-                                <td>1/$s^2$</td>
-                            </tr>
-                            <tr>
-                                <td>$K_d$</td>
-                                <td>[5.25, 5.25, 6.3]</td>
-                                <td>1/$s$</td>
-                            </tr>
-                            <tr>
-                                <td>$K_R$</td>
-                                <td>[1750, 1750, 140]</td>
-                                <td>1/$s^2$</td>
-                            </tr>
-                            <tr>
-                                <td>$K_\omega$</td>
-                                <td>[175, 175, 105]</td>
-                                <td>1/$s$</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="table-caption">Table I: Finalized gain values after tuning</div>
+
+                <!-- Project Overview -->
+                <div class="project-overview">
+                    <h3>Project Overview</h3>
+                    <p>
+                        This project develops a complete autonomy stack for quadrotor navigation that operates without external positioning systems. The core innovation lies in replacing traditional VICON motion capture dependency with an on-board Visual Inertial Odometry (VIO) system using stereo vision and IMU sensor fusion through an Error State Extended Kalman Filter (ES-EKF). This advancement enables true autonomous navigation using only on-board sensors, making the system deployable in GPS-denied and infrastructure-free environments.
+                    </p>
+                    
+                    <p>
+                        The technical implementation addresses the fundamental challenge of drift in IMU-based state estimation, where position errors grow quadratically with time due to double integration of accelerometer data. By fusing stereo vision measurements with inertial data, our ES-EKF optimally combines multiple state estimates, tracking features across frames to predict transformations while using disparity measurements for absolute depth estimation. We discovered that artificially scaling the IMU process noise covariance by a factor of 9 significantly improves performance by appropriately weighting visual measurements over potentially drifting inertial predictions.
+                    </p>
+                    
+                    <p>
+                        Building on our initial VICON-based implementation, the system incorporates A* path planning with Ramer-Douglas-Peucker waypoint sparsification and generates minimum-jerk trajectories for smooth flight. The geometric nonlinear controller gains were increased by approximately 1.2x compared to the VICON version to compensate for the VIO state estimation characteristics. For the extra credit challenge, we implemented an online replanning pipeline with a 7.5-meter planning horizon and 5-meter sensor range, enabling real-time obstacle avoidance and navigation in unknown environments. While the online replanner shows 15-25% longer completion times compared to global planning, it successfully demonstrates the feasibility of exploration in unmapped spaces.
+                    </p>
                 </div>
-                
-                <p>Intuitively, we interpreted the gains as ways to answer four different questions. Starting with $K_p$, we viewed this metric as measuring 'how important is it to to achieve a desired position?'. $K_d$ is the measure of 'how fast do you want to get to the desired position?'. Similarly, we can say that $K_R$ measures 'how important is it to achieve a desired orientation?' and $K_\omega$ measures 'how fast do you want to achieve the desired orientation?'. This intuition provided us a steady foundation to work off of and fine tune our parameters. It was fairly easy to tinker with each gain to reach our desired performance. However, we immediately noticed that testing on hardware required us to scale down our gains by around 30%. Additional fine-tuning during lab 1 and 2 narrowed us down to our final parameters. We can attribute the differences in gains due to model mismatch, lack of simulation fidelity, and flaws in our controller implementation.</p>
-                
-                <!-- Figure I: Step Tuning Test -->
-                <div class="figure-container">
-                    <img src="images/stepy_plot.png" alt="Step Tuning Test In y Direction" />
-                    <div class="figure-caption">Figure I: Step Tuning Test In y Direction</div>
+
+                <!-- Key Features -->
+                <div class="key-features">
+                    <h3>Key Technical Contributions</h3>
+                    <ul>
+                        <li><strong>Visual Inertial Odometry:</strong> Stereo vision + IMU fusion using Error State Extended Kalman Filter for drift-free state estimation</li>
+                        <li><strong>Adaptive Sensor Weighting:</strong> Optimized Kalman gain through strategic IMU noise scaling (9x) to prioritize visual measurements</li>
+                        <li><strong>Trajectory Generation:</strong> Piecewise polynomial minimum-jerk trajectories with 0.2m voxel resolution and adaptive margins</li>
+                        <li><strong>Online Replanning:</strong> Real-time obstacle avoidance with 7.5m planning horizon and collision prediction at 50Hz</li>
+                        <li><strong>Controller Tuning:</strong> Geometric nonlinear PD controller with gains optimized for VIO-based state estimation</li>
+                        <li><strong>Full Autonomy:</strong> Complete independence from external infrastructure - deployable in any environment</li>
+                    </ul>
                 </div>
-                
-                <p>Figure I shows an experiment we ran to tune our y-direction gain and damping parameters. Based on the plots, we can determine that our controller demonstrates a settling time of around 2 s, a rise time of around 1.1 s, a steady state error of around 2%, and a damping ratio of around 0.4. This experiment revealed a few flaws in our controller. First and foremost, the controller is underdamped and takes fairly long to settle into a steady state. Secondly, we immediately recognized a glaring issue in our z-direction tuning. At first, we attributed the discrepancy in desired and actual position as model mismatch, but in lab 2 we retuned our z gains to fix this issue. The process of fine-tuning the gains was straightforward as we would conduct a test, adjust the parameters, and repeat until we were satisfied.</p>
-                
-                <!-- Section III: Trajectory Generation -->
-                <div class="section-title">III. Trajectory Generation</div>
-                
-                <p>In this section, we discuss the approach for the generation of a piecewise trajectory connecting the waypoints from start to target for an input map in the discretized occupancy grid, as well as a method that generates an optimized flight path that aligns with the quadrotor's maneuverability while maintaining collision-free.</p>
-                
-                <p>Starting with the default <code>occupancy_map</code> file where a 3D occupancy map is generated from the given map environment by splitting the space into a grid of voxels at a given axial resolution, the occupancy map consists of voxels that are marked "occupied" when they intersect an obstacle or hit the boundary within the workspace, and others representing the discretized waypoints that are open access to the graph search planner.</p>
-                
-                <p>Then, the <code>graph_search</code> treats each unoccupied voxel from the previous map as a node in a graph, which is able to develop up to 26 edges connecting its neighbors in 3D. During the lab execution, an A* graph search algorithm is preferred over the plain Dijkstra method, since it incorporates a heuristic measure, which is the straight-line distance to the goal, to guide the search more efficiently. This heuristic attracts the exploration toward the target node, significantly reducing the exploration time to find an optimal path compared to Dijkstra, which blindly develops its path outward. To conclude, the cost of moving between neighboring nodes is the Euclidean distance [$l_2$ norm], while an admissible heuristic $h(n)$ estimates the cost from the current node to the goal.</p>
-                
-                <p style="text-align: center;">
-                $$c(\text{current}, \text{neighbor}) = \|\text{neighbor} - \text{current}\|$$
-                $$h(n) = \|n - \text{goal}\|$$
-                </p>
-                
-                <p>The total cost at each node is therefore:</p>
-                
-                <p style="text-align: center;">
-                $$f(n) = g(n) + h(n)$$
-                </p>
-                
-                <p>where $g(n)$ represents the cost so far from the start node to the current.</p>
-                
-                <p>After running A*, we apply the Ramer-Douglas-Peucker (RDP) algorithm to reduce redundant points along nearly straight segments. An RDP tolerance of $\varepsilon = 0.1\text{ m}$ is used, which prunes interior waypoints whose perpendicular distance to the line between the first and last point in a subset is below $\varepsilon$. The outcome is a sparser set of critical waypoints, preserving the overall path shape but removing unnecessary intermediate points that might complicate maneuvering along the trajectory. We construct a piecewise linear position trajectory to connect along each optimized waypoint, commanding the quadrotor to operate from start to goal. The position where each single segment ends is:</p>
-                
-                <p style="text-align: center;">
-                $$\mathbf{x}(t) = \mathbf{p}_i + (\mathbf{v}_i)(t - t_{\mathrm{start},i}), \quad t \in [t_{\mathrm{start},i}, t_{\mathrm{start},i} + T_i]$$
-                </p>
-                
-                <p>where $\mathbf{v}_i$ is a constant velocity vector for segment $i$, defined by</p>
-                
-                <p style="text-align: center;">
-                $$\mathbf{v}_i = v_i \frac{\mathbf{p}_{i+1} - \mathbf{p}_i}{\|\mathbf{p}_{i+1} - \mathbf{p}_i\|}$$
-                </p>
-                
-                <p>Hence, velocity is constant in each segment, and the position changes linearly from $\mathbf{p}_i$ to $\mathbf{p}_{i+1}$. Once $t$ exceeds $t_{\mathrm{start},i}+T_i$, we switch to the next segment $i+1$ until the Crazyflie hits the target. In our code, $v_i$ is chosen based on the segment length and the angular change between consecutive segments (with mild speed reductions if there is a sharp turn). The total trajectory time becomes</p>
-                
-                <p style="text-align: center;">
-                $$T_{\mathrm{total}} = \sum_{i=0}^{N-1} T_i$$
-                </p>
-                
-                <p>where a constant speed $v_i$ for each segment $[\mathbf{p}_i \rightarrow \mathbf{p}_{i+1}]$ is:</p>
-                
-                <p style="text-align: center;">
-                $$T_i = \frac{\|\mathbf{p}_{i+1} - \mathbf{p}_i\|}{v_i}$$
-                </p>
-                
-                <p>Since each segment uses constant velocity, the overall trajectory is only continuous in position ($C^0$-continuous); velocity changes instantaneously at segment boundaries. However, we limit the speed of the Crazyflie to under 1 m/s, which prevents aggressive maneuvering during the tests. By including an obstacle inflation margin of $0.2\text{ m}$ and a resolution of the occupancy grid of $\Delta x = \Delta y = \Delta z = 0.25\text{ m}$, we ensure that the resulting waypoints remain safely away from obstacles while keeping a low computational load. Hence, while the piecewise-linear approach does not strictly enforce higher-order continuity, it is straightforward to implement, fast to compute, and guarantees collision-free given the flight map. The plots below show (1) discrete waypoints and path, (2) 3D quadrotor trajectory, and (3) position, velocity, and acceleration log in the map <code>maze_2025_1</code>.</p>
-                
-                <!-- Figure II: Discrete waypoints and path -->
-                <div class="figure-container">
-                    <img src="images/Astar.png" alt="Discrete waypoints and path" style="max-width: 70%;" />
-                    <div class="figure-caption">Figure II: Discrete waypoints and path</div>
+
+                <!-- Results -->
+                <div class="results-section">
+                    <h3>Performance Results</h3>
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <img src="images/drifting_150.png" alt="Trajectory Tracking" />
+                            <h4>State Estimation Challenge</h4>
+                            <p>Initial VIO implementation showed drift and incorrect goal convergence, resolved through IMU noise scaling</p>
+                        </div>
+                        <div class="result-card">
+                            <img src="images/traj_ec.png" alt="Online Replanning" />
+                            <h4>Online Replanning</h4>
+                            <p>Successfully navigates unknown environments with limited sensor range, trading optimality for exploration capability</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <!-- Figure III: 3D quadrotor trajectory -->
-                <div class="figure-container">
-                    <img src="images/traj.png" alt="3D quadrotor trajectory" style="max-width: 70%;" />
-                    <div class="figure-caption">Figure III: 3D quadrotor trajectory</div>
+
+                <!-- Implementation Details -->
+                <div class="key-features">
+                    <h3>Implementation Highlights</h3>
+                    <ul>
+                        <li>Deployed on CrazyFlie 2.0 platform with custom stereo camera rig</li>
+                        <li>Achieved successful navigation through complex mazes without external positioning</li>
+                        <li>Demonstrated robust performance across 6 test environments (Maze, Window, Stairwell, etc.)</li>
+                        <li>Online replanner handles dynamic obstacles with 20-timestep replanning frequency</li>
+                        <li>Complete ROS integration for real-time processing and control</li>
+                    </ul>
                 </div>
-                
-                <!-- Figure IV: Position, velocity, and acceleration log -->
-                <div class="figure-container">
-                    <img src="images/xva_time.png" alt="Position, velocity, and acceleration log" style="max-width: 80%;" />
-                    <div class="figure-caption">Figure IV: Position, velocity, and acceleration log</div>
+
+                <!-- Technical Note -->
+                <div style="background-color: #fff3e0; padding: 1.5em; border-radius: 8px; margin: 2em 0; border-left: 4px solid #ff9800;">
+                    <h4 style="margin-top: 0; color: #e65100;">Technical Note</h4>
+                    <p style="margin-bottom: 0;">
+                        This project represents a significant advancement from traditional motion-capture-based quadrotor control. The transition to VIO-based state estimation required careful consideration of sensor fusion dynamics, particularly the balance between visual and inertial measurements. Our approach of scaling IMU process noise proved crucial for achieving reliable autonomous flight, demonstrating that sometimes the solution lies not in complex algorithms but in understanding the fundamental characteristics of sensor fusion.
+                    </p>
                 </div>
-                
-                </div>
-                <!-- End of Two Column Layout -->
-                
-                <!-- Section IV: Maze Flight Experiments -->
-                <div class="section-title">IV. Maze Flight Experiments</div>
-                
-                <!-- Figure V: Maze 1-3 -->
-                <div class="figure-container">
-                    <img src="images/Map1-3.png" alt="Maze 1-3" />
-                    <div class="figure-caption">Figure V: Maze 1-3 (Left to Right) with World Obstacle, Waypoints, Planned Trajectories, and Actual Flight Path</div>
-                </div>
-                
-                <!-- Two Column Layout Resumes -->
-                <div class="two-column-layout">
-                
-                <!-- Figure VI: Map 2 Actual Position and Velocity -->
-                <div class="figure-container">
-                    <img src="images/Map2_Actual_Position_and_Velocity.png" alt="Map 2 Actual Position and Velocity" />
-                    <div class="figure-caption">Figure VI: Map 2 Actual Position and Velocity</div>
-                </div>
-                
-                <p>We observe discrepancies between the planned trajectory and actual flight path in all three maps, especially during sharp turns and maneuvers around obstacles. One possible cause for the tracking error comes from the motor thrust limitations. The maximum thrust capabilities of the flight motors restricted the drone's response to control inputs during high-demand maneuvers, leading to larger than anticipated deviations from the planned path. In addition, interruptions in positional data due to occlusions of VICON cameras by obstacles resulted in inaccurate state estimations, causing the drone to stray off course. The discrepancies between the simulated and actual weight of the drone can be another cause, it led to inadequate PID controller settings and impacting the drone's dynamic response to control commands. To achieve safe trajectories, we can directly adjust the trajectory planning algorithm to include larger safety margins around obstacles, accounting for potential hardware limitation during path planning. We can also further adjust PID parameters using actual drone weight data.</p>
-                
-                <p>Since we have already observed undesired flight paths, it can be dangerous to make the trajectory more aggressive. The limited maximum thrust of the flight motors restricted the drone's ability to execute rapid or steep maneuvers, essential for more aggressive trajectories. The observed inaccuracies in positional data due to VICON camera occlusions and the lack of precise PID tuning for the actual drone weight meant that increasing the aggressiveness of the trajectories could lead to higher risks of collision or loss of control.</p>
-                
-                <p>To improve the system reliability and speed, one change we can make is tune the PID using real world data to reduce the discrepancy between simulated trajectory and actual pathways. A more robust trajectory planning algorithm can also improve the system reliability and speed, with higher dimension spline fitting, the trajectory can be smooth and reduce the potential issue with motor torque limitations. Incorporate higher resolution in path planning is another effective approach to enhance both the speed and reliability of the drone system. This allows the trajectory to be optimized at a more detailed level, enabling smoother transitions and tighter navigation around obstacles.</p>
-                
-                <p>If we had one more session in the lab to do something interesting, it will be interesting to try implementing more advanced control techniques with PID controller parameters dynamically based on observed performance metrics and environmental conditions encountered during flight. The goal would be to see how well the drone can optimize its flight stability and accuracy in response to dynamically changing conditions within the maze, potentially leading to more reliable and efficient navigation.</p>
-                
-                </div>
-                <!-- End of Two Column Layout -->
-                
+
             </div>
         </section>
     </div>
