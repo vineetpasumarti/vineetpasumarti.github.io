@@ -8,7 +8,14 @@
     <link rel="stylesheet" href="assets/css/main.css" />
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
     <style>
         #main .container {
             text-align: left;
@@ -22,64 +29,32 @@
         }
 
         .paper-title {
-            font-size: 2em;
+            font-size: 1.8em;
             font-weight: bold;
             margin-bottom: 0.5em;
-            line-height: 1.3;
         }
 
-        .authors {
+        .paper-subtitle {
             font-size: 1.2em;
             margin-bottom: 1em;
         }
 
-        .pdf-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #ffffff;
-            color: rgb(204, 34, 34);
-            text-decoration: none;
-            border-radius: 5px;
-            margin: 1em 0;
-            transition: background-color 0.3s;
-        }
 
-        .pdf-button:hover {
-            background-color: #ba2929;
-            color: white;
-        }
-
-        .pdf-button i {
-            margin-right: 5px;
-        }
-
-        .abstract {
-            background-color: #f5f5f5;
-            padding: 1.5em;
-            border-radius: 5px;
-            margin: 2em 0;
-            text-align: justify;
-        }
-
-        .abstract h3 {
-            text-align: center;
-            margin-bottom: 0.5em;
-        }
 
         .section-title {
             font-size: 1.3em;
             font-weight: bold;
+            text-align: center;
             margin-top: 2em;
             margin-bottom: 1em;
-            text-align: center;
             text-transform: uppercase;
         }
 
         .subsection-title {
             font-size: 1.1em;
-            font-weight: bold;
+            font-style: italic;
             margin-top: 1.5em;
-            margin-bottom: 0.5em;
+            margin-bottom: 0.8em;
         }
 
         .two-column-layout {
@@ -117,9 +92,9 @@
 
         .figure-caption {
             font-size: 0.9em;
-            text-align: justify;
-            margin: 0 auto;
-            max-width: 90%;
+            font-style: italic;
+            margin-top: 0.5em;
+            text-transform: uppercase;
         }
 
         .table-container {
@@ -147,8 +122,9 @@
 
         .table-caption {
             font-size: 0.9em;
-            margin-bottom: 0.5em;
-            text-align: center;
+            font-style: italic;
+            margin-top: 0.5em;
+            text-transform: uppercase;
         }
 
         .references {
@@ -216,34 +192,35 @@
     <div id="main">
         <section class="three">
             <div class="container">
+                <!-- Paper Header -->
                 <div class="paper-header">
-                    <h1 class="paper-title">'Beat-the-Expert': An IL-RL Framework to<br>Outperform Expert Racing
-                        Policies</h1>
-                    <div class="authors">Vineet Pasumarti, Ethan Senatore</div>
-                    <a href="assets/pdf/Robot_Learning_Final_Project-2.pdf" download class="pdf-button">
-                        <i class="fas fa-file-pdf"></i> Download PDF
+                    <div class="paper-title">'Beat-the-Expert': An IL-RL Framework to Outperform Expert Racing Policies</div>
+                    <div class="paper-subtitle">Robot Learning Final Project</div>
+                    <div style="font-size: 1em;">We present an autonomous racing framework on the F1TENTH platform that bootstraps 
+                        Proximal Policy Optimization (PPO) with a pre-trained HG-DAGGER imitation learning (IL) policy to improve 
+                        sample efficiency and exceed the performance of expert demonstrations.</div>
+                </div>
+
+                <!-- PDF Link Button -->
+                <div style="text-align: center; margin: 2em 0;">
+                    <a href="assets/pdf/Robot_Learning_Final_Project-2.pdf" target="_blank"
+                        style="display: inline-flex; align-items: center; padding: 0.8em 1.5em; background-color: #f5f5f5; border-radius: 5px; text-decoration: none; color: #333; transition: background-color 0.3s ease;">
+                        <i class="fas fa-file-pdf fa-lg" style="margin-right: 0.5em; color: #d32f2f;"></i>
+                        <span>View Full Paper (PDF)</span>
                     </a>
                 </div>
 
+                <!-- Authors -->
                 <div style="text-align: center; margin-bottom: 2em;">
-                    <img src="images/beatexpert_cover.gif" alt="F1TENTH Racing Visualization"
-                        style="max-width: 60%; border-radius: 5px;" />
+                    <p><strong>Authors:</strong> Vineet Pasumarti, Ethan Senatore</p>
                 </div>
 
-                <div class="abstract">
-                    <h3>Abstract</h3>
-                    <p>Scaled autonomous racing poses as an effective environment for developing perception, planning,
-                        and control algorithms with quantifiable performance metrics. Learning-based control policies
-                        typically leverage end-to-end reinforcement learning (RL) methods that are sample inefficient
-                        and prone to converging at local optima. We present an autonomous racing framework on the
-                        F1TENTH platform that bootstraps Proximal Policy Optimization (PPO) with a pre-trained HG-DAGGER
-                        imitation learning (IL) policy to improve sample efficiency and exceed the performance of expert
-                        demonstrations of varying difficulty. The policy we generate from our IL-RL framework surpasses
-                        the performance of the easiest expert demonstration, but fails to outperform the medium and
-                        hardest difficulty experts. Our findings confirm an imitation learning bootstrap improves RL
-                        sample efficiency, but also indicates that end-to-end RL may be most effective in producing an
-                        agile control policy in the context of autonomous racing.</p>
+                <!-- Cover Image -->
+                <div style="text-align: center; margin: 2em 0;">
+                    <img src="images/beatexpert_cover.gif" alt="Project Cover Image"
+                        style="min-width: 70%; border-radius: 5px;" />
                 </div>
+
 
                 <div class="section-title">I. Introduction</div>
                 <div class="two-column-layout">
@@ -508,6 +485,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div class="table-caption">Table I: Example Map Testing Across Different Policies</div>
                 </div>
 
                 <div class="two-column-layout">
@@ -607,8 +585,10 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div class="table-caption">Table II: End-to-End RL Test Metrics Across Different Tracks (25 Laps Each)</div>
                 </div>
 
+                <!-- Figure IV: Track Comparison -->
                 <div class="figure-container">
                     <img src="images/Hockenheim_map.png" style="width: 40%; display: inline-block; margin-right: 2%;" />
                     <img src="images/Spa_map.png" style="width: 40%; display: inline-block;" />

@@ -10,11 +10,122 @@
         #main .container {
             text-align: left;
         }
+
+        .paper-header {
+            text-align: center;
+            margin-bottom: 2em;
+        }
+
+        .paper-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+
+        .paper-subtitle {
+            font-size: 1.2em;
+            margin-bottom: 1em;
+        }
+
+        .authors-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1em;
+            text-align: center;
+            margin-bottom: 2em;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 2em;
+            margin-bottom: 1em;
+            text-transform: uppercase;
+        }
+
+        .subsection-title {
+            font-size: 1.1em;
+            font-style: italic;
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+
+        .two-column-layout {
+            column-count: 2;
+            column-gap: 2em;
+            text-align: justify;
+        }
+
+        .figure-container {
+            text-align: center;
+            margin: 2em 0;
+            break-inside: avoid;
+        }
+
+        .figure-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .figure-caption {
+            font-size: 0.9em;
+            font-style: italic;
+            margin-top: 0.5em;
+            text-transform: uppercase;
+        }
+
+        .table-container {
+            margin: 2em auto;
+            text-align: center;
+            break-inside: avoid;
+        }
+
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: auto;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #f5f5f5;
+        }
+
+        .table-caption {
+            font-size: 0.9em;
+            font-style: italic;
+            margin-top: 0.5em;
+            text-transform: uppercase;
+        }
+
+        @media screen and (max-width: 768px) {
+            .authors-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .two-column-layout {
+                column-count: 1;
+            }
+        }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
 </head>
@@ -53,33 +164,40 @@
     <div id="main">
         <section class="three">
             <div class="container">
-                <header>
-                    <h2 class="alt"><strong>Learning to Overtake in Drone Racing via Recurrent Reinforcement
-                            Learning</strong></h2>
-                </header>
-
-                <div class="author-row">
-                    <div><strong>Author:</strong> Vineet Pasumarti</div>
-                    <div>
-                        <a href="assets/pdf/Vineet_Pasumarti_ESE6500_Spring_2025_Final_Project.pdf" download
-                            class="pdf-download">
-                            <i class="fas fa-file-pdf"></i> Download PDF
-                        </a>
-                    </div>
+                <!-- Paper Header -->
+                <div class="paper-header">
+                    <div class="paper-title">Learning to Overtake in Drone Racing via Recurrent Reinforcement Learning</div>
+                    <div class="paper-subtitle">ESE 6500 Spring 2025 Final Project</div>
+                    <div style="font-size: 1em;">We study the problem of enabling an autonomous drone to overtake a leading opponent in head-to-head
+                        racing. Our recurrent architecture stacks a two-layer LSTM and four-layer MLP, extending the ego drone's 
+                        observation with the full opponent state and training with Proximal Policy Optimization.</div>
                 </div>
 
+                <!-- PDF Link Button -->
+                <div style="text-align: center; margin: 2em 0;">
+                    <a href="assets/pdf/Vineet_Pasumarti_ESE6500_Spring_2025_Final_Project.pdf" target="_blank"
+                        style="display: inline-flex; align-items: center; padding: 0.8em 1.5em; background-color: #f5f5f5; border-radius: 5px; text-decoration: none; color: #333; transition: background-color 0.3s ease;">
+                        <i class="fas fa-file-pdf fa-lg" style="margin-right: 0.5em; color: #d32f2f;"></i>
+                        <span>View Full Paper (PDF)</span>
+                    </a>
+                </div>
 
+                <!-- Authors -->
+                <div style="text-align: center; margin-bottom: 2em;">
+                    <p><strong>Author:</strong> Vineet Pasumarti</p>
+                </div>
 
-                <p>We study the problem of enabling an autonomous drone to overtake a leading opponent in head-to-head
-                    racing. While single-agent reinforcement learning with simple feedforward policies suffice for
-                    minimizing lap time, these policies fail in competitive settings due to their inability to
-                    anticipate opponent motion. We propose a recurrent architecture that stacks a two-layer LSTM and
-                    four-layer MLP and extends the ego drone's observation with the full opponent state and is trained
-                    with Proximal Policy Optimization. Our results show significant improvements in overtaking
-                    performance, with the recurrent policy consistently outperforming pure feed-forward architectures in
-                    competitive racing scenarios.</p>
+                <!-- Cover Image -->
+                <div style="text-align: center; margin: 2em 0;">
+                    <img src="images/track_screenshot.png" alt="Project Cover Image"
+                        style="min-width: 70%; border-radius: 5px;" />
+                </div>
 
-                <h3>Introduction</h3>
+                <!-- Two Column Layout Starts Here -->
+                <div class="two-column-layout">
+
+                    <!-- Section I: Introduction -->
+                    <div class="section-title">I. Introduction</div>
                 <p>Autonomous drone racing presents a challenging reinforcement learning (RL) problem due to the
                     importance of real-time decision making and high-speed control in the presence of an opponent. In
                     single-agent time trials in simulation, effective policies that minimize lap time can be learned
@@ -100,7 +218,7 @@
                     indicate that the recurrent architecture enables the ego drone to learn to anticipate and exploit
                     the opponent's behavior.</p>
 
-                <h4>Contributions</h4>
+                    <div class="subsection-title">Contributions</div>
                 <ul>
                     <li>We show that pure-MLP policies that succeed in single-agent racing fail to perform in
                         head-to-head racing despite fully observing the opponent state.</li>
@@ -109,7 +227,8 @@
                     <li>We include supplementary videos of the policies.</li>
                 </ul>
 
-                <h3>Background</h3>
+                    <!-- Section II: Background -->
+                    <div class="section-title">II. Background</div>
                 <p>On identical hardware, overtaking an opponent is oftentimes not a matter of achieving higher
                     straight-line speed, but rather executing deliberate trajectories to surpass the opponent during
                     turns. In motorsport, drivers are told to “carry more momentum” than the leading car when
@@ -155,7 +274,8 @@
                     future state; this leads to better policy updates.
                 </p>
 
-                <h3>Related Work</h3>
+                    <!-- Section III: Related Work -->
+                    <div class="section-title">III. Related Work</div>
                 <p>
                     [Geles et al., 2024] show that end-to-end reinforcement learning from pixels enables agile drone
                     flight, but their
@@ -174,7 +294,11 @@
                     alone is insufficient without temporal reasoning.
                 </p>
 
-                <h3>Approach</h3>
+                </div>
+                <!-- End of Two Column Layout -->
+
+                <!-- Section IV: Approach -->
+                <div class="section-title">IV. Approach</div>
 
                 <p>Our approach consists of a two-stage training pipeline designed to enable overtaking in drone racing
                     using reinforcement learning. We first train a time-trial policy for a single drone to follow a
@@ -183,23 +307,21 @@
                     opponent. Both stages are trained using PPO, but differ in observation space, architecture, and
                     reward structure.</p>
 
-                <figure style="text-align: center;">
+                <!-- Figure I: Track and Architecture -->
+                <div class="figure-container">
                     <div style="display: flex; justify-content: center; gap: 1em;">
                         <img src="images/track_screenshot.png" alt="View 1" style="width: 25%; height: auto;" />
                         <img src="images/architecture_diagrams(1).png" alt="View 2" style="width: 85%; height: auto;" />
                     </div>
-                    <figcaption style="font-size: 0.9em; color: #1d1d1d; margin-top: 0.5em;">
-                        Figure 1: (Left) Screenshot of the life-size Figure-8 track in the Genesis simulator. A pink orb
-                        is visualized in the
-                        center of the bottom-right gate denoting the current waypoint. (Center) The opponent drone’s
-                        neural controller receives
-                        a 17-dim state and consists of a 2-hidden layer MLP with 128 neurons each. (Right) The ego
-                        drone’s neural controller
-                        receives a 30-dim state and consists of two LSTM layers of 128 neurons each. The hidden state
-                        from the LSTM layers
-                        is fed into a 4-hidden layer MLP of 256, 128, 128, and 64 neurons respectively.
-                    </figcaption>
-                </figure>
+                    <div class="figure-caption">Figure I: (Left) Screenshot of the life-size Figure-8 track in the Genesis simulator. A pink orb
+                        is visualized in the center of the bottom-right gate denoting the current waypoint. (Center) The opponent drone's
+                        neural controller receives a 17-dim state and consists of a 2-hidden layer MLP with 128 neurons each. (Right) The ego
+                        drone's neural controller receives a 30-dim state and consists of two LSTM layers of 128 neurons each. The hidden state
+                        from the LSTM layers is fed into a 4-hidden layer MLP of 256, 128, 128, and 64 neurons respectively.</div>
+                </div>
+
+                <!-- Two Column Layout Resumes -->
+                <div class="two-column-layout">
 
                 <p>
                     <strong>Stage 1: Single-Agent Time-Trial Policy.</strong> In the first stage of our training
@@ -304,7 +426,11 @@
                     reward (6). We retain the sparse reward (7) for potential ablation studies.</p>
 
 
-                <h3>Results</h3>
+                </div>
+                <!-- End of Two Column Layout -->
+
+                <!-- Section V: Results -->
+                <div class="section-title">V. Results</div>
                 <p>We now evaluate the efficacy of our two-stage training pipeline in Table 1 with (i) the success rate,
                     averaging the
                     number of gates the ego (or single-agent) drone passes over the total number of gates encountered
@@ -315,21 +441,23 @@
                     making an overtake. If the
                     drone does not learn to overtake at all, it is denoted with ’Fail’.</p>
 
-                <h4>Comparison of Policy Architectures</h4>
+                <div class="subsection-title">Comparison of Policy Architectures</div>
 
-                <table style="width:100%; border-collapse: collapse; text-align: center;">
-                    <thead>
-                        <tr style="background-color: #f2f2f2;">
-                            <th style="padding: 8px; border: 1px solid #ddd;">Policy</th>
-                            <th style="padding: 8px; border: 1px solid #ddd;">Success Rate</th>
-                            <th style="padding: 8px; border: 1px solid #ddd;">Crash Rate</th>
-                            <th style="padding: 8px; border: 1px solid #ddd;">Lap Time (s)</th>
-                            <th style="padding: 8px; border: 1px solid #ddd;">Sustained Overtake Rate</th>
+                <!-- Table I: Comparison of Policy Architectures -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Policy</th>
+                                <th>Success Rate</th>
+                                <th>Crash Rate</th>
+                                <th>Lap Time (s)</th>
+                                <th>Sustained Overtake Rate</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">(A) Single-Agent 2-layer MLP (17-dim
+                            <td >(A) Single-Agent 2-layer MLP (17-dim
                                 input)</td>
                             <td>0.975 (39/40)</td>
                             <td>0.02</td>
@@ -337,21 +465,21 @@
                             <td>--</td>
                         </tr>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">(B) 2-layer MLP (20-dim input)</td>
+                            <td >(B) 2-layer MLP (20-dim input)</td>
                             <td>0.517 (15/29)</td>
                             <td>0.31</td>
                             <td>DNF</td>
                             <td>Fail</td>
                         </tr>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">(C) 4-layer MLP</td>
+                            <td >(C) 4-layer MLP</td>
                             <td>0.621 (18/29)</td>
                             <td>0.24</td>
                             <td>DNF</td>
                             <td>Fail</td>
                         </tr>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">(D) 4-layer MLP (Sparse r<sub>comp</sub>)
+                            <td >(D) 4-layer MLP (Sparse r<sub>comp</sub>)
                             </td>
                             <td>0.588 (20/34)</td>
                             <td>0.31</td>
@@ -359,21 +487,21 @@
                             <td>Fail</td>
                         </tr>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">(E) 1-layer LSTM w/ 4-layer MLP</td>
+                            <td >(E) 1-layer LSTM w/ 4-layer MLP</td>
                             <td>0.571 (12/21)</td>
                             <td>0.22</td>
                             <td>DNF</td>
                             <td>Fail</td>
                         </tr>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">(F) 2-layer LSTM w/ 3-layer MLP</td>
+                            <td >(F) 2-layer LSTM w/ 3-layer MLP</td>
                             <td>0.535 (23/43)</td>
                             <td>0.49</td>
                             <td>DNF</td>
                             <td>0.33 (2/6)</td>
                         </tr>
                         <tr>
-                            <td style="padding: 8px; border: 1px solid #ddd;">(G) 2-layer LSTM w/ 4-layer MLP</td>
+                            <td >(G) 2-layer LSTM w/ 4-layer MLP</td>
                             <td>0.857 (30/35)</td>
                             <td>0.18</td>
                             <td>7.65</td>
@@ -381,14 +509,11 @@
                         </tr>
                     </tbody>
                 </table>
-                <p style="text-align: center; font-style: italic; font-size: 0.9em; margin-top: 0.5em;">
-                    Table 1: Quantitative evaluation of single-agent and multi-agent policies. All policies use a
-                    30-dimensional observa-
-                    tion vector as input unless otherwise specified—the 20-dim input for policy (2) appends a
-                    3-dimensional xyz relative
-                    position of the opponent in ego frame. All multi-agent policies use the dense reward competition
-                    defined by (6).
-                </p>
+                <div class="table-caption">Table I: Quantitative evaluation of single-agent and multi-agent policies. All policies use a
+                    30-dimensional observation vector as input unless otherwise specified—the 20-dim input for policy (2) appends a
+                    3-dimensional xyz relative position of the opponent in ego frame. All multi-agent policies use the dense reward competition
+                    defined by (6).</div>
+                </div>
 
                 <p>
                     Among the multi-agent policies evaluated, the 2-layer LSTM with 4-layer MLP architecture achieves
@@ -426,14 +551,17 @@
                     opponent observations.
                 </p>
 
-                <figure style="text-align: center;">
+                <!-- Two Column Layout Resumes -->
+                <div class="two-column-layout">
+
+                <!-- Figure II: Policy Comparison -->
+                <div class="figure-container">
                     <div style="display: flex; justify-content: center; gap: 0.5em;">
                         <img src="images/policy2_plot1.png" alt="View 1" style="width: 35%; height: auto;" />
                         <img src="images/policy2_plot2.png" alt="View 2" style="width: 35%; height: auto;" />
                         <img src="images/policy2_plot3.png" alt="View 3" style="width: 35%; height: auto;" />
                     </div>
-                    <figcaption style="font-size: 0.9em; color: #1d1d1d; margin-top: 0.5em;">
-                        Figure 2: We show three plots of the ego drone (blue) using policy (C) and the opponent drone
+                    <div class="figure-caption">Figure II: We show three plots of the ego drone (blue) using policy (C) and the opponent drone
                         (magenta) using
                         policy (A) in flight at 3 seconds (Left) 6 seconds (Center) 8 seconds (Right). At 3 seconds, the
                         ego drone is able to
@@ -446,9 +574,8 @@
                         the ego drone fails to make progress along the track; the policy outputs poor commands and the
                         ego drone plummets.
                         Only showcasing an ability to fly within proximity of the opponent is a recurring theme with the
-                        pure MLP policies.
-                    </figcaption>
-                </figure>
+                        pure MLP policies.</div>
+                </div>
 
                 <p>
                     Interestingly, the 2-layer LSTM with 3-layer MLP policy (F) shows signs of opponent anticipation by
@@ -464,13 +591,13 @@
                     and exiting on a tight and fast racing line, as seen in the right plot of Figure 3.
                 </p>
 
-                <figure style="text-align: center;">
+                <!-- Figure III: Overtaking Behavior -->
+                <div class="figure-container">
                     <div style="display: flex; justify-content: center; gap: 1em;">
                         <img src="images/policy6_21-25.png" alt="View 1" style="width: 50%; height: auto;" />
                         <img src="images/policy7_0-8.png" alt="View 2" style="width: 50%; height: auto;" />
                     </div>
-                    <figcaption style="font-size: 0.9em; color: #1d1d1d; margin-top: 0.5em; margin-bottom: 0.5em;">
-                        Figure 3: (Left) We plot a four-second window of the ego drone (blue) using policy (F) and the
+                    <div class="figure-caption">Figure III: (Left) We plot a four-second window of the ego drone (blue) using policy (F) and the
                         opponent drone
                         (magenta) using policy (A). We deliberately highlight that the opponent drone approaches the
                         top-right gate with a
@@ -492,12 +619,15 @@
                         the gate with a wider
                         racing line than the opponent. By entering the turn wide, the ego drone is able to exit the turn
                         on a tighter and faster line
-                        than the opponent. This strategy aligns with the fundamentals of overtaking from Section 2.
-                    </figcaption>
-                </figure>
+                        than the opponent. This strategy aligns with the fundamentals of overtaking from Section 2.</div>
+                </div>
 
 
-                <h3>Discussion</h3>
+                <!-- Section VI: Discussion -->
+                <div class="section-title">VI. Discussion</div>
+                
+                <!-- Two Column Layout for Discussion -->
+                <div class="two-column-layout">
                 <p>We show through head-to-head drone racing that competitive multi-agent RL environments require more
                     than simply
                     extending the observation space or increasing network capacity. The failure of pure MLP policies to
@@ -524,7 +654,11 @@
                     future racing lines.
                 </p>
 
-                <h3>References</h3>
+                </div>
+                <!-- End of Two Column Layout -->
+
+                <!-- Section VII: References -->
+                <div class="section-title">VII. References</div>
                 <ol style="padding-left: 1.5em;">
                     <li>
                         Ismail Geles, Leonard Bauersfeld, Angel Romero, Jiaxu Xing, and Davide Scaramuzza.
