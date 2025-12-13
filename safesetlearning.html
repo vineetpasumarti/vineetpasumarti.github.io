@@ -1,0 +1,700 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Safe Set Learning | Vineet Pasumarti</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <style>
+        #main .container {
+            text-align: left;
+        }
+
+        .paper-header {
+            text-align: center;
+            margin-bottom: 2em;
+        }
+
+        .paper-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+
+        .paper-subtitle {
+            font-size: 1.2em;
+            margin-bottom: 1em;
+        }
+
+        .authors-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1em;
+            text-align: center;
+            margin-bottom: 2em;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 2em;
+            margin-bottom: 1em;
+            text-transform: uppercase;
+        }
+
+        .subsection-title {
+            font-size: 1.1em;
+            font-style: italic;
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+        }
+
+        .two-column-layout {
+            column-count: 2;
+            column-gap: 2em;
+            text-align: justify;
+        }
+
+        .figure-container {
+            text-align: center;
+            margin: 2em 0;
+            break-inside: avoid;
+        }
+
+        .figure-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .figure-caption {
+            font-size: 0.9em;
+            font-style: italic;
+            margin-top: 0.5em;
+            text-transform: uppercase;
+        }
+
+        .table-container {
+            margin: 2em auto;
+            text-align: center;
+            break-inside: avoid;
+        }
+
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: auto;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #f5f5f5;
+        }
+
+        .table-caption {
+            font-size: 0.9em;
+            font-style: italic;
+            margin-top: 0.5em;
+            text-transform: uppercase;
+        }
+
+        @media screen and (max-width: 768px) {
+            .authors-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .two-column-layout {
+                column-count: 1;
+            }
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+
+
+</head>
+
+<body class="is-preload">
+
+    <!-- Header -->
+    <div id="header">
+        <div class="top">
+            <nav id="nav">
+                <ul>
+                    <li><a href="index.html#about" id="about-link"><span class="icon solid fa-user">Vineet
+                                Pasumarti</span></a></li>
+                    <li><a href="index.html#projects" id="portfolio-link"><span
+                                class="icon solid fa-th">Projects</span></a></li>
+                    <li><a href="index.html#resume" id="resume-link"><span
+                                class="icon solid fa-file">Resume/CV</span></a></li>
+                    <li><a href="index.html#contact" id="contact-link"><span
+                                class="icon solid fa-envelope">Contact</span></a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="bottom">
+            <ul class="icons">
+                <li><a href="https://github.com/vineetpasumarti" class="icon brands fa-github"><span
+                            class="label">Github</span></a></li>
+                <li><a href="https://www.linkedin.com/in/vineetpasumarti/" class="icon brands fa-linkedin"><span
+                            class="label">LinkedIn</span></a></li>
+                <li><a href="index.html#contact" class="icon solid fa-envelope"><span class="label">Email</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div id="main">
+        <section class="three">
+            <div class="container">
+                <!-- Paper Header -->
+                <div class="paper-header">
+                    <div class="paper-title">Set Learning for Black-Box Systems via Dual Gaussian Process Control
+                        Barrier Functions</div>
+                    <div class="paper-subtitle">MEAM 5170: Control and Optimization in Robotics Fall 2025 Final Project
+                    </div>
+                    <div style="font-size: 1em;">We propose a data–driven framework for learning
+                        safe operating regions of black–box robotic systems from interaction. The method maintains two
+                        Gaussian process models: one
+                        for dynamics residuals and one for a state–space barrier function,
+                        learned solely from observable quantities. These models induce a
+                        robust control barrier function constraint with GP uncertainty,
+                        yielding a convex quadratic program for real–time safety filtering
+                        and a safety–aware Bayesian optimizer for controller tuning. Under standard GP confidence
+                        assumptions, the framework is compatible with high–probability safety analyses developed for
+                        GP–based safe learning, but in this report we focus on an empirical study, demonstrating
+                        data–efficient expansion of the certified safe set in simulation while avoiding constraint
+                        violations.</div>
+                </div>
+
+                <!-- PDF Link Button -->
+                <div style="text-align: center; margin: 2em 0;">
+                    <a href="SafeSetLearning_Paper.pdf" target="_blank"
+                        style="display: inline-flex; align-items: center; padding: 0.8em 1.5em; background-color: #f5f5f5; border-radius: 5px; text-decoration: none; color: #333; transition: background-color 0.3s ease;">
+                        <i class="fas fa-file-pdf fa-lg" style="margin-right: 0.5em; color: #d32f2f;"></i>
+                        <span>View Full Paper (PDF)</span>
+                    </a>
+                </div>
+
+                <!-- Authors -->
+                <div style="text-align: center; margin-bottom: 2em;">
+                    <p><strong>Authors:</strong> Milad Mesbahi, M.S.E. Robotics, Vineet Pasumarti, M.S.E. Robotics</p>
+                </div>
+
+                <!-- Two Column Layout Starts Here -->
+                <div class="two-column-layout">
+
+                    <!-- Section I: Introduction -->
+                    <div class="section-title">I. Introduction</div>
+                    <p>Safe deployment of autonomous systems requires knowledge of both the dynamics and the states in
+                        which the system
+                        can operate without violating safety constraints. In practice,
+                        simulation- or physics-based models differ from reality due
+                        to unmodeled dynamics, parameter drift, and environmental
+                        variability, and the true safe operating region is rarely known
+                        apriori or is installation-specific (e.g., configuration-dependent
+                        limits for manipulators or changing flight envelopes for aerial
+                        robots) [1]–[3]. These uncertainties make safe online learning
+                        challenging: the robot must explore to identify both dynamics
+                        and safety margins, yet unsafe actions may cause irreversible
+                        damage, motivating data-driven methods that (i) treat dynamics
+                        and safety boundaries as unknown functions inferred from
+                        noisy observations, (ii) explicitly represent uncertainty in these
+                        functions, and (iii) use uncertainty-aware models to certify and
+                        expand a safe set during learning.</p>
+
+                    <!-- Section II: Problem Formulation -->
+                    <div class="section-title">II. Problem Formulation</div>
+                    <p>We consider a control-affine nonlinear system</p>
+                    <p>\[ \dot{x} = f(x) + G(x)u \tag{1} \]</p>
+                    <p>and assume access to a nominal model \(f_0(x)\) and \(G_0(x)\)
+                        obtained from simulation or first principles.</p>
+
+                    <p><strong>Assumption 1.</strong> [4]–[6] The residual \(g(x) = f(x) - f_0(x)\)
+                        lies in a reproducing kernel Hilbert space (RKHS) \(\mathcal{H}_k\) with
+                        known kernel \(k : \mathbb{R}^n \times \mathbb{R}^n \rightarrow \mathbb{R}\) and bounded norm
+                        \(|g|_k \leq B\).</p>
+
+                    <p>Safety is encoded via a barrier function \(h : \mathbb{R}^n \rightarrow \mathbb{R}\)
+                        defining the safe set: \(\mathcal{S} = \{x \in \mathbb{R}^n : h(x) \geq 0\}\)</p>
+
+                    <p><strong>Definition 1</strong> (Control Barrier Function [7]). A continuously
+                        differentiable function \(h : \mathbb{R}^n \rightarrow \mathbb{R}\) is a control barrier
+                        function
+                        (CBF) for system (1) on the set \(\mathcal{S} = \{x : h(x) \geq 0\}\) if there
+                        exists an extended class-\(\mathcal{K}\) function \(\alpha : \mathbb{R} \rightarrow \mathbb{R}\)
+                        such that for
+                        all \(x \in \mathcal{S}\),</p>
+                    <p>\[ \sup_{u \in \mathcal{U}} \left[ \nabla h(x)^\top f(x) + \nabla h(x)^\top G(x)u + \alpha(h(x))
+                        \right] \geq 0. \tag{2} \]</p>
+
+                    <p>If \(h\) is a CBF and there exists a Lipschitz controller \(\pi : \mathbb{R}^n \rightarrow
+                        \mathbb{R}^m\) satisfying (2), then \(\mathcal{S}\) is forward invariant under
+                        the closed-loop dynamics [8].</p>
+
+                    <p><strong>Problem Statement.</strong> Since \(h^*\) is unknown, we cannot
+                        directly enforce (2). Instead, we must learn an estimate of
+                        \(h^*\) from data. Given a conservative initial safe set \(\hat{\mathcal{S}}_0 \subseteq
+                        \mathcal{S}^*\),
+                        nominal models \((f_0, h_0)\), and confidence level \(\delta \in (0, 1)\), our
+                        goal is to design an online dual learning and control scheme
+                        that, with probability at least \(1 - \delta\): (i) keeps the closed-loop
+                        state safe, \(x_t \in \mathcal{S}^*\) for all \(t\), (ii) enlarges the certified safe set
+                        monotonically, \(\hat{\mathcal{S}}_t \subseteq \hat{\mathcal{S}}_{t+1}\), and (iii) encourages
+                        \(\hat{\mathcal{S}}_t\) to approach
+                        \(\mathcal{S}^*\) as \(t \rightarrow \infty\), while allowing performance-oriented control in
+                        the interior of \(\hat{\mathcal{S}}_t\) [5], [6], [9].</p>
+
+                    <!-- Section III: Methods -->
+                    <div class="section-title">III. Methods</div>
+                    <p>We maintain two Gaussian process (GP) models: one for the
+                        dynamics residual \(g\) and one for the barrier function \(h^*\). We
+                        first establish GP preliminaries, then present each component.</p>
+
+                    <div class="subsection-title">A. Gaussian Process Preliminaries</div>
+                    <p>A GP defines a distribution over functions \(\phi : \mathbb{R}^d \rightarrow \mathbb{R}\)
+                        specified by a mean function \(m : \mathbb{R}^d \rightarrow \mathbb{R}\) and kernel \(k :
+                        \mathbb{R}^d \times \mathbb{R}^d \rightarrow \mathbb{R}\), written \(\phi \sim \mathcal{GP}(m,
+                        k)\) [10]. Given observations
+                        \(\{(z_i, y_i)\}_{i=1}^N\) with \(y_i = \phi(z_i) + \omega_i\) and \(\omega_i \sim
+                        \mathcal{N}(0, \sigma^2)\), the
+                        posterior at \(z \in \mathbb{R}^d\) is Gaussian with</p>
+                    <p>\[ \mu(z) = k(z)^\top (K + \sigma^2 I)^{-1} y, \tag{3} \]</p>
+                    <p>\[ \sigma^2(z) = k(z, z) - k(z)^\top (K + \sigma^2 I)^{-1} k(z), \tag{4} \]</p>
+                    <p>where \([k(z)]_i = k(z, z_i)\), \([K]_{ij} = k(z_i, z_j)\), and \(y = [y_1, \ldots, y_N]^\top\).
+                    </p>
+
+                    <p><strong>Lemma 1</strong> (Confidence Bound [11]). Let \(\phi \in \mathcal{H}_k\) with
+                        \(\|\phi\|_{\mathcal{H}_k} \leq B\). Define \(\beta_t = 2B + 300\gamma_t \log^3(t/\delta)\),
+                        where \(\gamma_t\)
+                        is the maximum information gain for \(t\) samples under \(k\). Then
+                        with probability at least \(1 - \delta\), for all \(t \geq 1\) and \(z \in \mathbb{R}^d\):</p>
+                    <p>\[ |\phi(z) - \mu_{t-1}(z)| \leq \beta_t^{1/2} \sigma_{t-1}(z). \tag{5} \]</p>
+
+                    <div class="subsection-title">B. Dynamics Residual Learning</div>
+                    <p>We place a GP prior on the residual: \(g \sim \mathcal{GP}(0, k_g)\). At
+                        each timestep, we observe</p>
+                    <p>\[ y_t = \dot{x}_t - f_0(x_t) - G(x_t)u_t + \omega_t, \tag{6} \]</p>
+                    <p>a noisy measurement of \(g(x_t)\), where \(\omega_t \sim \mathcal{N}(0, \sigma_g^2 I)\). The
+                        dataset \(\mathcal{D}_g^t = \{(x_i, y_i)\}_{i=1}^t\) yields posterior mean \(\mu_g^t\) and
+                        covariance \(\Sigma_g^t\) via (3)–(4). The learned dynamics is</p>
+                    <p>\[ \hat{f}_t(x) = f_0(x) + \mu_g^t(x). \tag{7} \]</p>
+                    <p>By Lemma 1 and Assumption 1, the true drift satisfies \(f(x) \in \mathcal{E}_t(x)\) with
+                        probability at least \(1 - \delta\), where the confidence set
+                        is</p>
+                    <p>\[ \mathcal{E}_t(x) = \left\{ \hat{f}_t(x) + \Delta : \|(\Sigma_g^t(x))^{-1/2} \Delta\|_2 \leq
+                        \beta_t^{1/2} \right\}. \tag{8} \]</p>
+
+                    <div class="subsection-title">C. Control Barrier Learning</div>
+                    <p>We model the unknown safe set via a latent control barrier
+                        function</p>
+                    <p>\[ \mathcal{S}^* = \{x \in \mathcal{X} : h^*(x) \geq 0\}, \tag{9} \]</p>
+                    <p>which is not available to the controller. Instead, we learn a
+                        function \(h : \mathcal{X} \rightarrow \mathbb{R}\) from data and use its sign to define
+                        a data-driven safe-set estimate \(\hat{\mathcal{S}} = \{x : h(x) \geq 0\}\), in
+                        the spirit of non-parametric Gaussian CBFs and supervised
+                        CBF–learning approaches that parametrize safety certificates
+                        directly from data [12]–[15]. We place a Gaussian process
+                        prior \(h(\cdot) \sim \mathcal{GP}(0, k_h)\) and collect training data from closed-loop
+                        rollouts. During each rollout we observe state sequences
+                        \(\{x_k\}_{k=0}^T\) together with a binary outcome indicating whether
+                        the trajectory remained constraint-satisfying or experienced a
+                        violation. From these observables we construct scalar labels</p>
+                    <p>\[ y_k = \ell(x_k, \text{outcome}, \tau), \]</p>
+                    <p>where \(\tau\) denotes trajectory-level statistics and \(\ell : \mathcal{X} \times \{0, 1\}
+                        \times \mathcal{T} \rightarrow \mathbb{R}\) is a task-dependent scoring function. By design,
+                        \(\ell\)
+                        assigns \(y_k > 0\) to states on trajectories with ample safety
+                        margin, \(y_k < 0\) to states that precede observed violations, and \(y_k \approx 0\) to
+                            near-miss states with small minimum margin. The map \(\ell\) is constructed solely from
+                            measurable features (e.g., distances, detector outputs) and does not require access to
+                            \(h^*\) or any latent parameters. Some application-specific feature engineering and data
+                            selection are therefore unavoidable, but all subsequent safety reasoning is carried out by
+                            the learned GP barrier rather than a hand-designed analytic CBF [12].</p>
+
+                            <p>Conditioning the GP on the dataset \(\mathcal{D}_h^t = \{(x_i, y_i)\}_{i=1}^N\)
+                                yields posterior mean \(\mu_h^t(x)\) and variance \(\sigma_h^t(x)\). Our dataset
+                                \(\mathcal{D}_h^t = \{(x_i, y_i)\}_{i=1}^N\), \(K_h \in \mathbb{R}^{N \times N}\) has
+                                entries \([K_h]_{ij} = k_h(x_i, x_j)\), and \(y_h = [y_1, \ldots, y_N]^\top\).</p>
+
+                            <p>For control, we use a conservative lower confidence bound</p>
+                            <p>\[ h_{lcb}^t(x) = \mu_h^t(x) - \beta_h^{1/2} \sigma_h^t(x), \tag{10} \]</p>
+                            <p>where \(\beta_h\) is chosen per Lemma 1. The certified estimated safe
+                                set is</p>
+                            <p>\[ \hat{\mathcal{S}}_t = \{x \in \mathbb{R}^n : h_{lcb}^t(x) \geq 0\}. \tag{11} \]</p>
+
+                            <p>For the squared exponential kernel \(k_h(x, x') = \sigma_f^2 \exp(-\|x - x'\|_{L^{-2}}^2
+                                / 2)\) with \(L = \text{diag}(\ell_1, \ldots, \ell_n)\), the gradient of the
+                                posterior mean is</p>
+                            <p>\[ \nabla \mu_h^t(x) = \sum_{i=1}^{|\mathcal{D}_h^t|} \alpha_i k_h(x_i, x) L^{-2} (x_i -
+                                x), \tag{12} \]</p>
+                            <p>where \(\alpha = (K_h + \sigma^2 I)^{-1} y_h\).</p>
+
+                            <div class="subsection-title">D. Safety Filter</div>
+                            <p>Given a nominal control \(u_{nom}\) (from another policy from RL,
+                                LQR, etc.), we compute a safe control by solving a quadratic
+                                program that enforces (2) for all dynamics in the confidence
+                                set (8).</p>
+
+                            <p>By Lemma 1, the true drift satisfies \(f(x) = \hat{f}_t(x) + \Delta\) for
+                                some \(\Delta\) with \(\|(\Sigma_g^t(x))^{-1/2} \Delta\|_2 \leq \beta_t^{1/2}\), with
+                                probability at
+                                least \(1 - \delta\). Safety requires (2) to hold for all such \(\Delta\):</p>
+                            <p>\[ \min_{\substack{\Delta \in \mathbb{R}^n \\ \|(\Sigma_g^t(x))^{-1/2} \Delta\|_2 \leq
+                                \beta_t^{1/2}}} \nabla h(x)^\top \left( \hat{f}_t(x) + \Delta + G(x)u \right) +
+                                \alpha(h(x)) \geq 0. \tag{13} \]</p>
+
+                            <p><strong>Proposition 1.</strong> The robust constraint (13) is equivalent to</p>
+                            <p>\[ \nabla h(x)^\top \left( \hat{f}_t(x) + G(x)u \right) - \beta_t^{1/2}
+                                \|(\Sigma_g^t(x))^{1/2} \nabla h(x)\|_2 + \alpha(h(x)) \geq 0. \tag{14} \]</p>
+
+                            <p>This follows from the support function of an ellipsoidal
+                                uncertainty set; see, e.g., [6], [16]. In practice, we enforce
+                                (14) using the conservative barrier estimate \(h_{lcb}^t\) in place of \(h\),
+                                and obtain the applied control input \(u_t\) by solving a convex
+                                quadratic program</p>
+                            <p>\[ u_t^* = \arg \min_{u \in \mathcal{U}} \|u - u_{nom}\|_2^2 \tag{15} \]</p>
+                            <p>subject to</p>
+                            <p>\[ \nabla h_{lcb}^t(x_t)^\top \left( \hat{f}_t(x_t) + G(x_t)u \right) - \beta_t^{1/2}
+                                \|(\Sigma_g^t(x_t))^{1/2} \nabla h_{lcb}^t(x_t)\|_2 + \alpha(h_{lcb}^t(x_t)) \geq 0, \]
+                            </p>
+                            <p>which enforces the GP–robust CBF constraint as a hard inequality [12]. The controller and
+                                CBF-QP treat \(\{x : h_{lcb}^t(x) \geq 0\}\) as the certified safe set, so that data
+                                collected online
+                                both refines the geometry of the learned barrier and shrinks
+                                its epistemic uncertainty; over time, this yields progressively
+                                less conservative yet probabilistically safe behavior without
+                                requiring a hand-designed analytic CBF for the task, which
+                                can be quite difficult in practice [17].</p>
+
+                            <div class="subsection-title">E. Safe Bayesian Optimization</div>
+                            <p>The framework extends to optimizing controller parameters
+                                \(\theta \in \Theta \subset \mathbb{R}^p\) while maintaining safety, as proposed in
+                                [18].
+                                Let \(s : \Theta \rightarrow \mathbb{R}\) denote safety (minimum \(h_{lcb}^t\) over a
+                                trajectory)
+                                and \(r : \Theta \rightarrow \mathbb{R}\) denote reward. The goal is</p>
+                            <p>\[ \max_{\theta \in \Theta} r(\theta) \quad \text{subject to} \quad s(\theta) \geq 0.
+                                \tag{16} \]</p>
+
+                            <p>We place independent GP priors \(s \sim \mathcal{GP}(0, k_s)\) and \(r \sim
+                                \mathcal{GP}(0, k_r)\). After \(n\) evaluations, the posteriors yield \(\mu_s^n,
+                                \sigma_s^n\)
+                                and \(\mu_r^n, \sigma_r^n\). Define the safe parameter set</p>
+                            <p>\[ \Theta_{n}^{safe} = \left\{ \theta \in \Theta : \mu_s^n(\theta) - \beta_s^{1/2}
+                                \sigma_s^n(\theta) \geq 0 \right\}. \tag{17} \]</p>
+
+                            <p>At each iteration, we select parameters via one of two
+                                strategies:</p>
+
+                            <p><strong>Expansion:</strong> Maximize safety uncertainty near the boundary
+                                of \(\Theta_n^{safe}\):</p>
+                            <p>\[ \theta_{exp} = \arg \max_{\theta \in \Theta} \sigma_s^n(\theta) \cdot \mathbf{1}\left[
+                                \mu_s^n(\theta) - \beta_s^{1/2} \sigma_s^n(\theta) \geq -\epsilon \right]. \tag{18} \]
+                            </p>
+
+                            <p><strong>Exploitation:</strong> Maximize reward upper confidence bound
+                                within \(\Theta_n^{safe}\):</p>
+                            <p>\[ \theta_{opt} = \arg \max_{\theta \in \Theta_n^{safe}} \mu_r^n(\theta) + \beta_r^{1/2}
+                                \sigma_r^n(\theta). \tag{19} \]</p>
+
+                            <p>The algorithm alternates with probability \(\rho_{exp}\) for expansion,
+                                ensuring monotonic growth of \(\Theta_n^{safe}\).</p>
+
+                </div>
+                <!-- End of Two Column Layout -->
+
+                <!-- Section IV: Simulation Study and Results -->
+                <div class="section-title">IV. Simulation Study and Results</div>
+
+                <div class="subsection-title">A. Discrete Gridworld</div>
+                <p>We first validate our approach on a discrete gridworld environment that captures the essential
+                    structure of
+                    the safe set learning problem. The gridworld is composed of 15 by 15 cells with two types of
+                    hazards:
+                    circular obstacles that
+                    cause immediate failure
+                    upon contact, and slip
+                    zones where unknown
+                    probabilistic dynamics
+                    affects the agent's
+                    cell transitions. The
+                    agent observes only
+                    its current cell and
+                    local surrounding within
+                    a 1 cell radius. The
+                    locations and extents of
+                    the hazards are unknown apriori.</p>
+
+                <p><strong>1) Discrete CBF Formulation:</strong> In the discrete gridworld setting, the CBF constraint
+                    simplifies to action enumeration. For
+                    each candidate action \(a \in \{\text{UP}, \text{DOWN}, \text{LEFT}, \text{RIGHT}, \text{STAY}\}\),
+                    we compute the expected next-state safety value accounting
+                    for slip uncertainty:</p>
+                <p>\[ \bar{h}(s') = \mu_h(s') - \beta^{1/2} \sigma_h(s') - \gamma \cdot \hat{p}_{slip}(s) \cdot
+                    \Delta_{slip} \]</p>
+
+                <p><strong>2) Gridworld Results:</strong> We run 10 learning episodes on a
+                    grid with two circular obstacles and two slip zones. The agent
+                    starts from a bootstrapped safe region of radius 3 cells around
+                    the origin. Figure 2 shows the monotonic expansion of the
+                    certified safe set. Episode 1 coverage of 38.7% (87 cells) grows
+                    to 74.2% (167 cells) by episode 10, with the expansion rate
+                    decreasing as the frontier approaches true obstacle boundaries.
+                    We record 5 total collisions over 10 episodes, with 4 occurring
+                    in episodes 1-5 and only 1 in episodes 6-10. After episode 6,
+                    the learned safety GP provided sufficient coverage to prevent
+                    further violations.</p>
+
+                <div class="subsection-title">B. Continuous</div>
+                <p>We extend our framework on a 1D position continuous
+                    control task intentional model mismatch in both dynamics and
+                    safety. A point mass moves within bounds \(|p| \leq p_{max}\) under
+                    wind disturbance, with state \(x = [p, v]^\top\) and discrete-time
+                    dynamics</p>
+                <p>\[ p_{t+1} = p_t + \Delta t \, v_t, \quad v_{t+1} = v_t + \Delta t \left( u_t + d(p_t, v_t, t)
+                    \right), \tag{21} \]</p>
+                <p>where \(d(\cdot)\) is an unknown disturbance. We introduce two
+                    sources of mismatch that mimic common modeling errors.
+                    First, a <strong>dynamics mismatch</strong>: the true disturbance combines
+                    position-dependent wind, velocity drag, time-varying gusts,
+                    and directional bias</p>
+                <p>\[ d(p, v, t) = \underbrace{c_w \, \text{sgn}(p) \frac{p^2}{1 + p^2}}_{\text{position push}} -
+                    \underbrace{c_d \, v|v|}_{\text{drag}} + \underbrace{A_g \sin(\omega_g t)}_{\text{gust}} + d_b,
+                    \tag{22} \]</p>
+                <p>while the analytic baseline assumes only a bounded disturbance \(|d| \leq \bar{d}\), underestimating
+                    the true magnitude near
+                    the boundary. This wind model captures how constraints can
+                    exhibit complex nonlinear behavior that is difficult to encode
+                    analytically without online adaptation. Second, a <strong>barrier mismatch</strong>: the true safe
+                    set has velocity–position coupling</p>
+                <p>\[ h^*(x) = p_{max}^2 - p^2 - \lambda_h |v| |p|, \tag{23} \]</p>
+                <p>whereas the analytic baseline uses \(h_0(x) = p_{max}^2 - p^2\), naively
+                    ignoring velocity effects.</p>
+
+                <p><strong>Task.</strong> An LQR controller tracks a reference \(p_{ref}\) near the
+                    boundary with weights \(Q = \text{diag}(q_p, q_v)\). Larger \(q_p\) produces
+                    more aggressive tracking but increases the risk of constraint
+                    violation.</p>
+
+                <p><strong>Observable Labels.</strong> A key challenge is learning the barrier
+                    without oracle access to \(h^*(x)\). Our framework focuses on
+                    learning from safe trajectories: the conservative CBF–QP
+                    produces rollouts that, in our simulations, remain within \(\mathcal{S}^*\),
+                    so true violations are rare and most data come from near–safe
+                    behavior. We therefore construct labels from observables along
+                    surviving trajectories,</p>
+                <p>\[ y_h(x) = \frac{p_{max} - |p|}{p_{max}} - \lambda_y \frac{|v|}{v_{max}} \frac{|p|}{p_{max}},
+                    \tag{24} \]</p>
+                <p>which heuristically encode that safety margin decreases with
+                    (i) proximity to the wall and (ii) high velocity near the
+                    boundary. These labels depend only on measured states \((p, v)\)
+                    and do not require access to \(h^*\) or latent parameters. After
+                    each episode, we update the barrier GP with subsampled
+                    trajectory labels, progressively refining \(\hat{\mathcal{S}}_t\) while preserving
+                    its conservative, inner-approximation character.</p>
+
+                <p><strong>Methods.</strong> We compare: <strong>Plain LQR</strong>: no safety filter (performance upper
+                    bound); <strong>Analytic CBF</strong>: mismatched barrier \(h_0\)
+                    and assumed bound \(|d| \leq \bar{d}\); <strong>Dual Learning</strong>: learns dynamics
+                    and barrier via Algorithm 1.</p>
+
+                <p>Training uses two phases: conservative exploration (low
+                    \(q_p\), high CBF gain \(\alpha\)) followed by moderate exploration,
+                    accumulating approximately 400 barrier samples and 2500
+                    dynamics samples over 25 episodes.</p>
+
+                <p><strong>Results.</strong> Figure 1 (left) compares the true, assumed, and
+                    learned safe sets. The position-only analytic barrier substantially overestimates safety at high
+                    speeds, failing to contract near the wall. In contrast, the observation-based barrier
+                    GP learns the velocity-dependent tightening and yields a
+                    conservative inner approximation of \(\mathcal{S}^*\). Figure 1 (middle)
+                    shows closed-loop trajectories under aggressive LQR weights
+                    \((q_p, q_v) = (5.0, 1.0)\): plain LQR drives the state close to or
+                    beyond the boundary, the analytic CBF occasionally prevents
+                    violations but admits near-misses, while the dual learning
+                    controller maintains a larger safety margin. Figure 1 (right)
+                    illustrates dynamics learning: with relatively few samples,
+                    the GP mean tracks the true wind field and the uncertainty
+                    inflates in poorly explored regions, inducing more conservative CBF constraints there. Table I
+                    summarizes safety over
+                    8 independent episodes. An episode is counted as safe if
+                    \(\min_t h^*(x_t) \geq 0\).</p>
+
+                <!-- Table I: Safety comparison -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Safe Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Plain LQR</td>
+                                <td>0/8 (0%)</td>
+                            </tr>
+                            <tr>
+                                <td>Analytic CBF</td>
+                                <td>5/8 (62%)</td>
+                            </tr>
+                            <tr>
+                                <td>Dual Learning</td>
+                                <td>8/8 (100%)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-caption">Table I: Safety comparison</div>
+                </div>
+
+                <p>The analytic CBF
+                    underestimates disturbance
+                    near boundaries where
+                    wind bias compounds,
+                    and permits high-velocity
+                    approaches that violate
+                    the true barrier (23). Our
+                    method learns both effects
+                    from data.</p>
+
+                <!-- Two Column Layout for Discussion -->
+                <div class="two-column-layout">
+
+                    <!-- Section V: Discussion and Conclusion -->
+                    <div class="section-title">V. Discussion and Conclusion</div>
+                    <p>By jointly modeling dynamics residuals and a latent control
+                        barrier function, we successfully constructed a GP–robust CBF
+                        constraint that can be enforced via a convex quadratic program,
+                        and coupled it with a SafeOpt-style Bayesian optimizer for
+                        controller tuning.</p>
+
+                    <p>Our experiments exposed several practical challenges. First,
+                        the barrier labels are hand-designed heuristics built from
+                        observable quantities. Second, the GP machinery introduces
+                        computational overhead that grows with the number of data
+                        points. Third, we did not develop a safety guarantee for the
+                        coupled dynamics–barrier learning loop.</p>
+
+                    <p>Finally, we made progress toward a vision-inertial (VIO)
+                        quadrotor model, though we could not fully address the
+                        additional complications within the project timeframe. The
+                        quadrotor introduces higher-dimensional state and control
+                        spaces, attitude-position coupling, and perception-driven estimates with their own failure
+                        modes. These factors complicate
+                        barrier label design, GP state representation, and CBF-QP
+                        feasibility under aggressive maneuvers. Future work includes
+                        (i) completing VIO quadrotor integration in simulation to learn
+                        safe flight-envelopes; (ii) developing GP approximations and
+                        kernels tailored to underactuated flight; and (iii) closing the
+                        loop between safe BO and GP-CBF filtering for end-to-end
+                        tuning.</p>
+
+                </div>
+                <!-- End of Two Column Layout -->
+
+                <!-- Section VI: References -->
+                <div class="section-title">References</div>
+                <ol style="padding-left: 1.5em;">
+                    <li>L. Brunke, M. Greeff, A. W. Hall, Z. Yuan, S. Zhou, J. Panerati, and
+                        A. P. Schoellig, "Safe learning in robotics: From learning-based control
+                        to safe reinforcement learning," <em>Annual Review of Control, Robotics,
+                            and Autonomous Systems</em>, vol. 5, no. 1, pp. 411–444, 2022.</li>
+                    <li>P. Liu, K. Zhang, D. Tateo, S. Jauhri, Z. Hu, J. Peters, and G. Chalvatzaki, "Safe reinforcement
+                        learning of dynamic high-dimensional
+                        robotic tasks: navigation, manipulation, interaction," <em>arXiv preprint
+                            arXiv:2209.13308</em>, 2022.</li>
+                    <li>S. Sun and C. C. de Visser, "Quadrotor safe flight envelope prediction in
+                        the high-speed regime: A monte-carlo approach," in <em>AIAA Scitech 2019
+                            Forum</em>, 2019, p. 0948.</li>
+                    <li>P. Jagtap, G. J. Pappas, and M. Zamani, "Control barrier functions for
+                        unknown nonlinear systems using gaussian processes," in <em>2020 59th
+                            IEEE Conference on Decision and Control (CDC)</em>. IEEE, 2020, pp.
+                        3699–3704.</li>
+                    <li>F. Berkenkamp, M. Turchetta, A. Schoellig, and A. Krause, "Safe model-based reinforcement
+                        learning with stability guarantees," <em>Advances in
+                            neural information processing systems</em>, vol. 30, 2017.</li>
+                    <li>F. Castaneda, J. J. Choi, W. Jung, B. Zhang, C. J. Tomlin, and
+                        K. Sreenath, "Recursively feasible probabilistic safe online learning with
+                        control barrier functions," <em>arXiv preprint arXiv:2208.10733</em>, 2022.</li>
+                    <li>A. D. Ames, S. Coogan, M. Egerstedt, G. Notomista, K. Sreenath, and
+                        P. Tabuada, "Control barrier functions: Theory and applications," 2019.
+                        [Online]. Available: <a href="https://arxiv.org/abs/1903.11199"
+                            target="_blank">https://arxiv.org/abs/1903.11199</a></li>
+                    <li>A. D. Ames, X. Xu, J. W. Grizzle, and P. Tabuada, "Control barrier
+                        function based quadratic programs for safety critical systems," <em>IEEE
+                            Transactions on Automatic Control</em>, vol. 62, no. 8, pp. 3861–3876, 2016.</li>
+                    <li>A. Taylor, A. Singletary, Y. Yue, and A. Ames, "Learning for safety-critical control with
+                        control barrier functions," in <em>Learning for dynamics
+                            and control</em>. PMLR, 2020, pp. 708–717.</li>
+                    <li>C. K. Williams and C. E. Rasmussen, <em>Gaussian processes for machine
+                            learning</em>. MIT press Cambridge, MA, 2006, vol. 2, no. 3.</li>
+                    <li>N. Srinivas, A. Krause, S. M. Kakade, and M. Seeger, "Gaussian process
+                        optimization in the bandit setting: No regret and experimental design,"
+                        <em>arXiv preprint arXiv:0912.3995</em>, 2009.
+                    </li>
+                    <li>M. A. Khan, T. Ibuki, and A. Chatterjee, "Gaussian control barrier
+                        functions: Non-parametric paradigm to safety," <em>IEEE Access</em>, vol. 10,
+                        pp. 99 823–99 836, 2022.</li>
+                    <li>M. Aali and J. Liu, "Learning high-order control barrier functions
+                        for safety-critical control with gaussian processes," in <em>2024 American
+                            Control Conference (ACC)</em>. IEEE, 2024, pp. 1–6.</li>
+                    <li>S. Liu, A. Kumar, J. Fisac, R. Adams, and P. Ramadge, "Probf: Learning
+                        probabilistic safety certificates with barrier functions," <em>arXiv preprint
+                            arXiv:2112.12210</em>, 2021.</li>
+                    <li>F. Zhu, T. Pati, and S. Z. Yong, "Learning safe data-driven control barrier
+                        functions for unknown continuous systems," <em>IEEE Control Systems
+                            Letters</em>, 2025.</li>
+                    <li>S. Boyd and L. Vandenberghe, <em>Convex optimization</em>. Cambridge
+                        university press, 2004.</li>
+                    <li>L. Lindemann, H. Hu, A. Robey, H. Zhang, D. Dimarogonas, S. Tu,
+                        and N. Matni, "Learning hybrid control barrier functions from data," in
+                        <em>Conference on robot learning</em>. PMLR, 2021, pp. 1351–1370.
+                    </li>
+                    <li>F. Berkenkamp, A. P. Schoellig, and A. Krause, "Safe controller
+                        optimization for quadrotors with gaussian processes," in <em>2016 IEEE
+                            international conference on robotics and automation (ICRA)</em>. IEEE,
+                        2016, pp. 491–496.</li>
+                </ol>
+
+
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer">
+        <ul class="copyright">
+            <li>&copy; 2025 Vineet Pasumarti</li>
+        </ul>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
